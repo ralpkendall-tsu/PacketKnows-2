@@ -1,0 +1,542 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packet Knows</title>
+    {% bootstrap_css %}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/global.css'%}">
+    <link rel="stylesheet" href="{% static 'css/landing-page.css'%}">
+    <script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <nav id='home' class="navbar navbar-expand-lg navbar-light bg-red">
+        <div class="container">
+            <div class=""><a href="{% url 'core:landingPage'%}">
+                <img src="{% static 'res/icons/logo.png' %}" alt="" class="logo me-3 ">
+                <p class="navbar-brand fw-bold text-white d-inline-block">PACKETKNOWS</p>
+            </a>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav m-auto mb-2 mb-lg-0">
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-white" aria-current="page" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-white" href="#classes">Classes</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-white" href="#">References</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-white" href="#about">About</a>
+                    </li>
+                </ul>
+                {% if user.is_authenticated %}
+                <a href="{% url 'core:dashboard'%}" class="btn btn-custom-success">Dashboard</a>
+                <a href="{% url 'user:logout'%}" class="text-decoration-none text-white ms-3"> Logout</a>
+                {% else %}
+                <button class="btn btn-custom-success"  data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                <a href="#" class="text-decoration-none text-white ms-3" data-bs-toggle="modal" data-bs-target="#signupModal"> Signup</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+
+    {% comment %} Hero Section {% endcomment %}
+    <div class="hero">
+        <section class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-5">
+                    <h1 class="text-white">Networking Education for Students and Professionals</h1>
+                    <p class="mt-4 text-white fs-5">Packetknows: A Dual Mode Learning Platform with Responsive Networking Simulation 
+                        aims to provide a comprehensive educational experience in dealing with basic 
+                        configurations on network devices for individuals interested in pursuing a 
+                        career in network engineering.</p>
+                    <button class="btn btn-custom-success mt-3" data-bs-toggle="modal" data-bs-target="#signupModal">Register Now</button>
+                </div>
+                <div class="col-md-5">
+                    <img src="{% static 'res/graphics/HeroImage2.png' %}" alt="" class="img-fluid">
+                </div>
+            </div>
+        </section>
+        <br/>
+        <br/>
+    </div>
+    
+
+    {% comment %} Classes Section {% endcomment %}
+    <section id='classes' class="container classes-section">
+        <div class="row" data-aos="fade-down">
+            <h1 class="text-center mb-3">Classes</h1>
+        </div>
+        <div class="row py-5 my-5 align-items-center justify-content-center">
+            <div class="col-md-5" data-aos="zoom-in-right">
+                <h3 class="text-start">Introduction to Networking</h3>
+                <p class="text-start mt-4 fs-5">The first course in a 3-course series designed to prepare you for entry-level
+                    networking job. First Step Toward a Networking Career</p>
+            </div>
+            <div class="col-md-5" data-aos="zoom-in-left">
+                <img src="{% static 'res/images/LandingPage/Classes-img1.jpg' %}" alt="" class="img-fluid rounded">
+            </div>
+        </div>
+        <div class="row py-5 my-5 align-items-center justify-content-center">
+            <div class="col-md-5" data-aos="zoom-in-right">
+                <img src="{% static 'res/images/LandingPage/Classes-img2.jpg' %}" alt="" class="img-fluid rounded">
+            </div>
+            <div class="col-md-5" data-aos="zoom-in-left">
+                <h3 class="text-end">Switching, Routing, and Wireless Essentials</h3>
+                <p class="text-end mt-4 fs-5">This course focuses on switching
+                    technologies and router operations that
+                    support small-to-medium business
+                    networks, including wireless local area
+                    networks (WLAN) and security concepts</p>
+            </div>
+        </div>
+        <div class="row py-5 my-5 align-items-center justify-content-center">
+            <div class="col-md-5" data-aos="zoom-in-right">
+                <h3 class="text-start">Enterprise Networking, Security, and Automation</h3>
+                <p class="text-start mt-4 fs-5">This describes the architectures and
+                    considerations related to designing,
+                    securing, operating, and troubleshooting
+                    enterprise networks</p>
+            </div>
+            <div class="col-md-5" data-aos="zoom-in-left">
+                <img src="{% static 'res/images/LandingPage/Classes-img3.jpg' %}" alt="" class="img-fluid rounded">
+            </div>
+        </div>
+        
+    </section>
+
+
+    {% comment %} Dual Mode Section {% endcomment %}
+    <section id='dual-mode' class="dual-mode-section">
+        <div class="row mb-5">
+            <h1 class="text-center " data-aos="fade-down">Dual Mode</h1>
+        </div>
+        <div class="row align-items-center justify-content-center mt-5">
+            <div class="col-md-4 mt-5" data-aos="zoom-in-right">
+                <h3 class="text-start">Training vs Testing Mode</h3>
+                <p class="mt-4 fs-5">The dual mode gives exceptional learning capabilities in networking, adequate Knowledge, 
+                    and technical skills required in taking CCNA certification exams. The following are 
+                    the advantages of Dual Mode:</p>
+                <ul class="fw-bold unordered-list fs-5">
+                    <li>Certification Preparation</li>
+                    <li>Assessment of Knowledge</li>
+                    <li>Skill Development</li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-4 dual-card " data-aos="flip-right">
+                    <div class="row ms-1">
+                        <div class="col-md-3 bg-pink p-3 rounded">
+                            <img src="{% static 'res/icons/DrawKit Vector Illustration Frosted Glass Computer Icons/PNG/TrainingMode.png' %}" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="fw-bold text-dark-red ms-1 fs-5"> Training Mode</p>
+                        <ul class="card-text fw-bold unordered-list text-dark-red fs-6">
+                            <li>Step-by-Step Guidance</li>
+                            <li>Self-Paced Learning</li>
+                            <li>Error Correction</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-4 dual-card" data-aos="flip-left">
+                    <div class="row ms-1">
+                        <div class="col-md-3 bg-red p-3 rounded">
+                            <img src="{% static 'res/icons/DrawKit Vector Illustration Frosted Glass Computer Icons/PNG/TestingMode.png' %}" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="fw-bold text-dark-red ms-1 fs-5"> Training Mode</p>
+                        <ul class="card-text fw-bold unordered-list text-dark-red fs-6">
+                            <li>Step-by-Step Guidance</li>
+                            <li>Self-Paced Learning</li>
+                            <li>Error Correction</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {% comment %} About Us Section {% endcomment %}
+    <section id='about' class="container about-us-section">
+        <div class="row mb-5">
+            <h1 class="text-center " data-aos="fade-down">About Us</h1>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-10 accordion text-red" id="accordionExample">
+                <div class="accordion-item mt-2" data-aos="zoom-in-right">
+                    <h2 class="accordion-header" id="heading1">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                            What is the platform about?
+                        </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            PacketKnows is a CCNA learning platform that aims to provide
+                            a comprehensive educational experience and sample laboratories in
+                            dealing with basic configurations on switches, routers, and PC for
+                            individuals interested in pursuing a career in network
+                            engineering.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mt-2">
+                    <h2 class="accordion-header" id="heading2" data-aos="zoom-in-left">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                            What is our goal?
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            The purpose of PacketKnows is to provide a convenient,
+                            easy-to-learn, and effective way for users to advance their
+                            Networking education, helping them to pass the required exams,
+                            earn their certifications, and eventually find a career in
+                            Networking. The platform is designed to help users learn concepts
+                            and skills with confidence and enthusiasm.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mt-2" data-aos="zoom-in-right">
+                    <h2 class="accordion-header" id="heading3">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                            Who can use the platform?
+                        </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            PacketKnows caters to a diverse user base, including
+                            academic instructors who benefit from its easy-to-explain teaching
+                            materials and seamless score integration, students who can enhance
+                            their understanding of networking concepts through interactive
+                            simulations, and self-learners preparing for certification exams
+                            like CCNA by offering a valuable resource for skill review and
+                            exam readiness.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mt-2">
+                    <h2 class="accordion-header" id="heading4" data-aos="zoom-in-left">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                            What is the NOVELTY of this project?
+                        </button>
+                    </h2>
+                    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            The platforms adapt a dual mode training and testing system
+                            giving the highlight key feature of responsive networking
+                            simulations.
+                            <br />
+                            - The training mode will greatly assist learners in process of
+                            basic configuration, by providing help with specific instructions,
+                            and giving error corrections when doing sample exercise. 
+                            <br />
+                            - The testing mode will reliably measure the knowledge and skills of
+                            the user after undergoing training mode. Thus, the dual mode gives
+                            exceptional learning capabilities in CCNA, adequate Knowledge, and
+                            technical skills required in taking CCNA laboratory exams.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mt-2" data-aos="zoom-in-right">
+                    <h2 class="accordion-header" id="heading5">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                            Is this for free?
+                        </button>
+                    </h2>
+                    <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            We're thrilled to announce that our website is free to use!
+                            😃 PacketKnows provides valuable information, services, and
+                            resources to everyone without any cost or hidden fees. We're
+                            committed to making your online experience as accessible and
+                            enjoyable as possible. So, go ahead and dive into our website,
+                            make the most of it, and share this fantastic news with your
+                            friends and family. We're here to make your digital journey as
+                            smooth and cost-free as possible!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mt-2">
+                    <h2 class="accordion-header" id="heading6" data-aos="zoom-in-left">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                            Want to know more?
+                        </button>
+                    </h2>
+                    <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            See our <button class="btn btn-custom-success">Whitepaper</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {% comment %} Developer Section {% endcomment %}
+    <section id='developer' class="container developer-section">
+        <div class="row">
+            <h1 class="text-center mb-5" data-aos="fade-down">Developers</h1>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-3" data-aos="flip-right">
+                <div class="card dev mx-2">
+                    <div class="pt-4">
+                        <img src="{% static 'res/images/developers/RKCA.png' %}" alt="" class="card-img-top img-fluid px-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold text-white mt-3 my-3">Ralp Kendall C. Abad</h5>
+                            <p class="card-text fw-bold text-white my-3">Project Manager/Programmer</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-around mb-3">
+                            <a href="https://www.facebook.com/ralpkendall" target="_blank"><i class="fa-brands fa-facebook fa-2x" style="color: #32de84;"></i></a>
+                            <a href="https://www.instagram.com/ralpkendall/" target="_blank"><i class="fa-brands fa-instagram fa-2x" style="color: #32de84;"></i></a>
+                            <a href="https://github.com/ralpkendall-tsu" target="_blank"><i class="fa-brands fa-github fa-2x" style="color: #32de84;"></i></a>
+                            <a href="mailto:ralpkendall@example.com"><i class="fa-solid fa-envelope fa-2x" style="color: #32de84;"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" data-aos="flip-right">
+                <div class="card dev mx-2">
+                    <div class="pt-4">
+                        <img src="{% static 'res/images/developers/CNA.png' %}" alt="" class="card-img-top img-fluid px-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold text-white mt-3 my-3">Christian Niel T. Asoy</h5>
+                            <p class="card-text fw-bold text-white my-3">Technical Writer</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-around mb-3">
+                            <a href="https://www.facebook.com/KingChizzy29" target="_blank"><i class="fa-brands fa-facebook fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-brands fa-instagram fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-brands fa-github fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-solid fa-envelope fa-2x" style="color: #32de84;"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" data-aos="flip-left">
+                <div class="card dev mx-2">
+                    <div class="pt-4">
+                        <img src="{% static 'res/images/developers/JDCD.png' %}" alt="" class="card-img-top img-fluid px-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold text-white mt-3 my-3">Joshua Dale C. Domingo</h5>
+                            <p class="card-text fw-bold text-white my-3">Designer/QA Staff</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-around mb-3">
+                            <a href="https://www.facebook.com/Axolotl25" target="_blank"><i class="fa-brands fa-facebook fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-brands fa-instagram fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-brands fa-github fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-solid fa-envelope fa-2x" style="color: #32de84;"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" data-aos="flip-left">
+                <div class="card dev mx-2">
+                    <div class="pt-4">
+                        <img src="{% static 'res/images/developers/ADTV.png' %}" alt="" class="card-img-top img-fluid px-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold text-white mt-3 my-3">Arman Dave Vilar</h5>
+                            <p class="card-text fw-bold text-white my-3">System Analyst</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-around mb-3">
+                            <a href="https://www.facebook.com/armandave.vilar.9" target="_blank"><i class="fa-brands fa-facebook fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-brands fa-instagram fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-brands fa-github fa-2x" style="color: #32de84;"></i></a>
+                            <a href="#"><i class="fa-solid fa-envelope fa-2x" style="color: #32de84;"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    {% comment %} Disclaimer Section {% endcomment %}
+    <section id='disclaimer' class="container disclaimer-section" data-aos="fade-down">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <h1 class="card-header bg-danger text-center text-white">Disclaimer!</h1>
+                    <div class="card-body">
+                        <p class="card-text fs-4 p-5">The platform makes use of content derived from Cisco Netacad courses for
+                            the purpose of academic research and development. However, it is important to note that the
+                            rights and ownership of the Cisco Netacad course materials remain exclusively with Cisco 
+                            Systems, Inc. This platform does not claim any ownership or proprietary rights over the 
+                            content used, and it acknowledges and respects the intellectual property of Cisco Systems,
+                            Inc. The incorporation of Cisco Netacad course content in this study is solely intended 
+                            to enhance the learning experience and contribute to the advancement of knowledge in the 
+                            field of networking and responsive networking simulation.
+                        </p>
+                        <div class="d-flex justify-content-around my-4">
+                            <a href="https://www.netacad.com/" target="_blank" class="btn btn-danger py-3 px-5">Cisco Netacad</a>
+                            <a href="https://www.netacad.com/sites/default/files/netacad-terms-and-conditions-en.pdf" target="_blank" class="btn btn-danger py-3 px-5">Cisco Netacad: Terms and Agreements</a>
+                            <a href="https://www.officialgazette.gov.ph/1997/06/06/republic-act-no-8293/" target="_blank" class="btn btn-danger py-3 px-5">Fair Use in RA 8293 of the Philippines</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% comment %} Footer Section {% endcomment %}
+    <footer>
+        <div class="row align-items-center text-center p-3">
+            <div class="col-md-3 mt-3">
+                <img src="{% static 'res/icons/logo.png' %}" alt="" class="footer-logo me-3">
+                <p class="text-white">2023 Abad, et.al. <br> All rights disclaimed.</p>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex flex-column">
+                    <a class="nav-link text-white fw-bold" href="#home">Home</a>
+                    <a class="nav-link text-white fw-bold" href="#dual-mode">Dual Mode</a>
+                    <a class="nav-link text-white fw-bold" href="#disclaimer">Disclaimer</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex flex-column">
+                    <a class="nav-link text-white fw-bold" href="#classes">Classes</a>
+                    <a class="nav-link text-white fw-bold" href="#about">About Us</a>
+                    <a class="nav-link text-white fw-bold" href="#">Sign Up</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex flex-column">
+                    <a class="nav-link text-white fw-bold" href="#">References</a>
+                    <a class="nav-link text-white fw-bold" href="#developer">Developers</a>
+                    <a class="nav-link text-white fw-bold" href="#">Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% comment %} Login Modal Section {% endcomment %}
+    {% include 'core/components/auth/login.html'%}
+
+
+    {% comment %} Signup Modal Section {% endcomment %}
+    {% include 'core/components/auth/signup.html'%}
+
+
+    {% comment %} Disclaimer Modal Section {% endcomment %}
+    <div class="modal fade " id="disclaimerModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " style="max-width: 80%;">
+            <div class="modal-content bg-red rounded">
+                <div class="modal-body ">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <h1 class="card-header text-center bg-pink text-dark-red">Disclaimer!</h1>
+                                <div class="card-body">
+                                    <p class="card-text fs-4 p-5">The platform makes use of content derived from Cisco Netacad courses for
+                                        the purpose of academic research and development. However, it is important to note that the
+                                        rights and ownership of the Cisco Netacad course materials remain exclusively with Cisco 
+                                        Systems, Inc. This platform does not claim any ownership or proprietary rights over the 
+                                        content used, and it acknowledges and respects the intellectual property of Cisco Systems,
+                                        Inc. The incorporation of Cisco Netacad course content in this study is solely intended 
+                                        to enhance the learning experience and contribute to the advancement of knowledge in the 
+                                        field of networking and responsive networking simulation.
+                                    </p>
+                                    <div class="d-flex justify-content-around my-4">
+                                        <a href="https://www.netacad.com/" target="_blank" class="btn btn-danger py-3 px-5">Cisco Netacad</a>
+                                        <a href="https://www.netacad.com/sites/default/files/netacad-terms-and-conditions-en.pdf" target="_blank" class="btn btn-danger py-3 px-5">Cisco Netacad: Terms and Agreements</a>
+                                        <a href="https://www.officialgazette.gov.ph/1997/06/06/republic-act-no-8293/" target="_blank" class="btn btn-danger py-3 px-5">Fair Use in RA 8293 of the Philippines</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% bootstrap_javascript %}
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // chart library initialization
+        AOS.init();
+
+        {% comment %} SIGNUP MODAL {% endcomment %}
+        document.getElementById('userTypeDropdown').addEventListener('change', function () {
+            var selectedValue = this.value;
+    
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(function (section) {
+                section.style.display = 'none';
+
+                section.querySelectorAll('input, textarea').forEach(function (input) {
+                // Exclude the <select> element
+                    if (input.tagName.toLowerCase() !== 'select') {
+                        input.value = '';
+                    }
+                });
+            });
+
+            document.getElementById('commonSection').querySelectorAll('input, select, textarea').forEach(function(input) {
+                input.value = '';
+            });
+            document.getElementById('password1').querySelectorAll('input').forEach(function(input) {
+                input.value = '';
+            });
+            document.getElementById('password2').querySelectorAll('input').forEach(function(input) {
+                input.value = '';
+            });
+
+    
+            // Show the selected section
+            document.getElementById(selectedValue + 'Section').style.display = 'block';
+        });
+
+        // MODALS
+        {% if showSignupModal == True %}
+        document.addEventListener('DOMContentLoaded', function() {
+            var signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
+            signupModal.show();
+        });
+        {% elif showLoginModal == True %}
+        document.addEventListener('DOMContentLoaded', function() {
+            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+        });
+        {% else %}
+        document.addEventListener('DOMContentLoaded', function() {
+            var disclaimerModal = new bootstrap.Modal(document.getElementById('disclaimerModal'));
+            disclaimerModal.show();
+        });
+        {% endif %}
+
+    
+    </script>
+</body>
+</html>

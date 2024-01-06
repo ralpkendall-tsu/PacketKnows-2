@@ -1,0 +1,42 @@
+*:active,
+*:focus{
+    box-shadow: none !important;
+}
+.btn-custom-success {
+    background-color: #32DE84; /* Replace with your desired color */
+    border-color: #32DE84; /* Replace with your desired color for the border */
+}
+.btn-custom-success:hover{
+    border-color: #157347;
+    background-color: #157347;
+    color: white
+}
+.btn-custom-success:active{
+    border-color: #12623c;
+    background-color: #12623c;
+}
+.text-dark-red {
+    color:#761E1E;
+}
+.text-red{
+    color: #cb3737;
+}
+.bg-red{
+    background-color: #cb3737;
+}
+.bg-pink{
+    background-color: #FFD8D8;
+}
+.bg-white{
+    background-color: #FAFAFA;
+}
+
+
+
+.logo{
+    width: 2rem;
+}
+
+main {
+    /* overflow-x: hidden !important; */
+}

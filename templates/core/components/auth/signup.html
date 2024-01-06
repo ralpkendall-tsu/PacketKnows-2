@@ -1,0 +1,88 @@
+{% load static %}
+
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row m-4 align-items-center">
+                    <div class="col-md-6">
+                        <p class='fs-2'>Jumpstart your <br> Networking Skills now!</p>
+                        <img src="{% static 'res/icons/hero-pic.png' %}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <form action="{% url 'user:signup'%}" enctype="multipart/form-data" method="post">
+                            {% csrf_token %}
+                            <h1 class="pb-5 fs-1">Signup</h1>
+
+                            <select id="userTypeDropdown" class="form-select mb-3 fs-5" name="category">
+                                <option value="student">Student</option>
+                                <option value="instructor">Instructor</option>
+                                <option value="selfLearner">Self Learner</option>
+                            </select>
+
+                            <!-- Common form fields go here -->
+                            <div id="commonSection" class="">
+                                <!-- Example: <input type="text" name="common_field"> -->
+                                <div class="mb-3">
+                                    {{ signupForm.email }}
+                                    <div class="text-red">{{ signupForm.email.errors }}</div>
+                                </div>
+                                <div class="mb-3">
+                                    {{ signupForm.first_name }}
+                                    <div class="text-red">{{ signupForm.first_name.errors }}</div>
+                                </div>
+                                <div class="mb-3">
+                                    {{ signupForm.last_name }}
+                                    <div class="text-red">{{ signupForm.last_name.errors }}</div>
+                                </div>
+                            </div>
+
+                            <div id="studentSection" class="form-section">
+                                <!-- Example: <input type="text" name="student_field"> -->
+                                <div class="mb-3">
+                                    {{ signupForm.school_id_student }}
+                                    <div class="text-red">{{ signupForm.school_id_student.errors }}</div>
+                                </div>
+                            </div>
+                        
+                            <!-- Instructor-related form fields go here -->
+                            <div id="instructorSection" class="form-section" style="display: none;">
+                                <!-- Example: <input type="text" name="instructor_field"> -->
+                                <div class="mb-3">
+                                    {{ signupForm.school_id_instructor }}
+                                    <div class="text-red">{{ signupForm.school_id_instructor.errors }}</div>
+                                </div>
+                                <div class="mb-3">
+                                    {{ signupForm.evidences_instructor }}
+                                    <div class="text-red">{{ signupForm.evidences_instructor.errors }}</div>
+                                </div>
+                            </div>
+                        
+                            <!-- Self Learner-related form fields go here -->
+                            <div id="selfLearnerSection" class="form-section" style="display: none;">
+                                <!-- Example: <input type="text" name="self_learner_field"> -->
+                                <div class="mb-3">
+                                    <p>Evidence(.jpg, .jpeg, .png,) :</p>
+                                    {{ signupForm.evidences_selfLearner }}
+                                    <div class="text-red">{{ signupForm.evidences_selfLearner.errors }}</div>
+                                </div>
+                            </div>
+                            
+                            <div id="password1" class="mb-3">
+                                {{ signupForm.password1 }}
+                                <div class="text-red">{{ signupForm.password1.errors }}</div>
+                            </div>
+                            <div id="password2" class="mb-3">
+                                {{ signupForm.password2 }}
+                                <div class="text-red">{{ signupForm.password2.errors }}</div>
+                            </div>
+
+                            <div class="text-red">{{ signupForm.non_field_errors }}</div>
+                            <button class="btn btn-danger w-100" type="submit">Signup</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

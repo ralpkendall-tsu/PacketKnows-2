@@ -1,0 +1,68 @@
+{% load static %}
+    <div class="mt-2">
+        <a href="#" class="fw-bold text-dark-red nav-link">
+            <img src="{% static 'res/icons/logo.png' %}" alt="" class="logo me-3 ">PACKETKNOWS
+        </a>
+
+        <p class="text-muted fw-bold text-center mt-5">MENU</p>
+        <ul class="nav flex-column">
+            {% if request.path == '/dashboard/' %}
+                <li class="nav-item bg-danger rounded py-2">
+                    <a class="nav-link active text-white fw-bold" href="{% url 'core:dashboard'%}">
+                        <i class="fa-solid fa-chart-column fa-lg me-3" style="color: #FFFFFF;"></i>Dashboard
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item py-2">
+                    <a class="nav-link active text-dark-red fw-bold" href="{% url 'core:dashboard'%}">
+                        <i class="fa-solid fa-chart-column fa-lg me-3" style="color: #761E1E;"></i>Dashboard
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if request.path == '/classes/' %}
+                <li class="nav-item bg-danger rounded py-2">
+                    <a class="nav-link active text-white fw-bold" href="{% url 'core:classes'%}">
+                        <i class="fa-solid fa-table-list fa-lg me-3" style="color: #FFFFFF;"></i>Classes
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item py-2">
+                    <a class="nav-link active text-dark-red fw-bold" href="{% url 'core:classes'%}">
+                        <i class="fa-solid fa-table-list fa-lg me-3" style="color: #761E1E;"></i>Classes
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+
+        <p class="text-muted fw-bold text-center mt-5">OTHERS</p>
+        <ul class="nav flex-column">
+            {% if request.path == '/settings/' %}
+                <li class="nav-item bg-danger rounded py-2">
+                    <a class="nav-link active text-white fw-bold" href="{% url 'core:settings'%}">
+                        <i class="fa-solid fa-gear fa-lg me-3" style="color: #FFFFFF;"></i>Settings
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item py-2">
+                    <a class="nav-link active text-dark-red fw-bold" href="{% url 'core:settings'%}">
+                        <i class="fa-solid fa-gear fa-lg me-3" style="color: #761E1E;"></i>Settings
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if request.path == '/help/' %}
+                <li class="nav-item bg-danger rounded py-2">
+                    <a class="nav-link active text-white fw-bold" href="{% url 'core:help'%}">
+                        <i class="fa-solid fa-circle-question fa-lg me-3" style="color: #FFFFFF;"></i>Help
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item py-2">
+                    <a class="nav-link active text-dark-red fw-bold" href="{% url 'core:help'%}">
+                        <i class="fa-solid fa-circle-question fa-lg me-3" style="color: #761E1E;"></i>Help
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>

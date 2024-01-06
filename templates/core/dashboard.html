@@ -1,0 +1,28 @@
+
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        
+        <div class="col-2 fixed-top bg-pink h-100" id="green">
+            {% include 'core/components/sidebar.html'%}
+        </div>
+        <div class="col-md-10 ms-auto" style="padding: 0; overflow-x: hidden !important;">
+            {% include 'core/components/topnav.html'%}
+            
+            <main class="mt-5 pt-1">
+                {% if userCategory == 'Student'%}
+                    {% include 'core/dashboards/student-dashboard.html'%}
+                {% elif userCategory == 'Self Learner'%}
+                    {% include 'core/dashboards/selfLearner-dashboard.html'%}
+                {% elif userCategory == 'Instructor'%}
+                    {% include 'core/dashboards/instructor-dashboard.html'%}
+                {% endif %}
+            </main>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

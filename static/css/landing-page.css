@@ -1,0 +1,94 @@
+body {
+    background-color: #FF9292;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* NAVBAR */
+
+
+
+/* HERO SECTION */
+.hero {
+    background: no-repeat;
+    background-image: url('../res/graphics/hero-wave.svg');
+    background-size: cover;
+    animation: moveWave 20s linear infinite;
+    padding-top: 64px;
+}
+@keyframes moveWave {
+    0%, 100% {
+        background-position: 0% center;
+    }
+    25% {
+        background-position: 7% center;
+    }
+    50% {
+        background-position: 15% center;
+    }
+    75% {
+        background-position: 7% center;
+    }
+}
+
+/* CLASSES SECTION */
+.classes-section{
+    margin-top: 64px;
+}
+
+/* DUAL MODE SECTION */
+.dual-mode-section {
+    margin-top: 128px;
+}
+.unordered-list{
+    list-style-type: circle;
+}
+.dual-card{
+    border-radius: 32px;
+}
+
+/* ABOUT US SECTION */
+.about-us-section{
+    margin-top: 128px;
+}
+#accordionExample .accordion-button,
+#accordionExample .accordion-body {
+    color: #cb3737; /* Replace with your desired text color */
+}
+#accordionExample .accordion-button{
+    background-color: #f2f2f2;
+}
+#accordionExample .accordion-button:hover{
+    background-color: #761E1E;
+    color: #ffffff;
+}
+
+/* DEVELOPERS SECTION  */
+.developer-section{
+    margin-top: 128px;
+}
+.dev{
+    border-radius: 32px;
+    background-color: #cb3737;
+}
+
+/* DISCLAIMER SECTION */
+.disclaimer-section{
+    margin-top: 128px;
+}
+
+/* FOOTER SECTION */
+footer {
+    margin-top: 128px;
+    background-color: #761E1E;
+}
+.footer-logo{
+    width: 5rem;
+}
+
+/* LOGIN MODAL SECTION */
+.border-bottom {
+    border:none;
+    border-bottom: 2px solid black
+  }
