@@ -16,9 +16,12 @@ class ActivityCategory(models.Model):
     
     class Meta:
         verbose_name_plural = "Activity Categories"
+        
+    def __str__(self):
+        return f"{self.name}"
 
 class BaseActivity(models.Model):
-    number = models.DecimalField(max_digits=3, decimal_places=2)
+    number = models.CharField(max_length=4)
     answer_key = models.TextField(blank=True,null=True)
     category = models.ForeignKey(ActivityCategory, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -33,6 +36,9 @@ class BaseActivity(models.Model):
     
     class Meta:
         verbose_name_plural = "Base Activities"
+        
+    def __str__(self):
+        return f"{self.course.slug} - {self.number}"
     
 class Activity(models.Model):
     base_activity = models.ForeignKey(BaseActivity, on_delete=models.CASCADE)
@@ -47,4 +53,7 @@ class Activity(models.Model):
     
     class Meta:
         verbose_name_plural = "Activities"
+        
+    def __str__(self):
+        return f"{self.base_activity.course.slug} - {self.base_activity.number}"
     

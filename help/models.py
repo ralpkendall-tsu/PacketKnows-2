@@ -4,11 +4,14 @@ from activity import models as activityModels
 
 # Create your models here.
 class TestReactivation(models.Model):
-    activity = models.ManyToManyField(activityModels.Activity)
+    activity = models.ForeignKey(activityModels.Activity, on_delete=models.CASCADE)
     message = models.TextField()
     
     class Meta:
         verbose_name_plural = "Test Reactivations"
+        
+    def __str__(self):
+        return f"{self.activity.base_activity.number}"
     
 class StudentIDChange(models.Model):
     student = models.ForeignKey(userModels.CustomUser, on_delete=models.CASCADE)
@@ -16,6 +19,9 @@ class StudentIDChange(models.Model):
     
     class Meta:
         verbose_name_plural = "Student ID Changes"
+        
+    def __str__(self):
+        return f"{self.student.email} - {self.new_school_id}"
     
 class Notification(models.Model):
     sender = models.ForeignKey(userModels.CustomUser, on_delete=models.CASCADE, related_name='sent_notifications')
@@ -26,3 +32,6 @@ class Notification(models.Model):
     
     class Meta:
         verbose_name_plural = "Notifications"
+        
+    def __str__(self):
+        return f"{self.sender.email}: {self.title}"

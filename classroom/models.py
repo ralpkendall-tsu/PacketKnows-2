@@ -21,6 +21,9 @@ class Classroom(models.Model):
     
     class Meta:
         verbose_name_plural = "Classrooms"
+        
+    def __str__(self):
+        return f"{self.name}"
     
 class Enrollment(models.Model):
     student = models.ForeignKey(userModels.CustomUser, on_delete=models.CASCADE)
@@ -31,6 +34,9 @@ class Enrollment(models.Model):
     
     class Meta:
         verbose_name_plural = "Enrollments"
+        
+    def __str__(self):
+        return f"{self.student.first_name} {self.student.last_name} - {self.classroom.name}"
 
     
     

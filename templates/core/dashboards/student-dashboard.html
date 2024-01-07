@@ -35,7 +35,7 @@
         </div>
         <div class="col-md-6 me-4">
             <div class="d-flex justify-content-between align-items-center">
-                <p class="m-0">Grade Average</p>>
+                <p class="m-0">Grade Average</p>
                 <a href="#" class="btn btn-light">View Grades</a>
             </div>
             <div class="text-muted fw-bold mt-2">
@@ -48,51 +48,72 @@
         </div>
     </div>
     <div class="row me-4 mt-5">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <p class="fs-5 fw-bold mb-0">Strength Rating</p>
             <p class="text-muted mt-2">Based on all of the exams taken</p>
-            <div class="row justify-content-start">
-                <div class=" bg-red text-center text-white strength-rating-item">
-                    <p class="fw-bold fs-5">90%</p>
-                    <p class="">Routing Protocols</p>
+
+            <div>
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">60%</p>
+                        <p class=" p-0 m-0">VLAN</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle2.png' %}" alt="" class="img-fluid">
+                </div>
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">60%</p>
+                        <p class=" p-0 m-0">VLAN</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle.png' %}" alt="" class="img-fluid">
+                </div>
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">60%</p>
+                        <p class=" p-0 m-0">VLAN</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle3.png' %}" alt="" class="img-fluid">
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class=" bg-red text-center text-white strength-rating-item">
-                    <p class="fw-bold fs-5">90%</p>
-                    <p class="">Routing Protocols</p>
-                </div>
-            </div>
-            <div class="row justify-content-end">
-                <div class=" bg-red text-center text-white strength-rating-item">
-                    <p class="fw-bold fs-5">90%</p>
-                    <p class="">Routing Protocols</p>
-                </div>
-            </div>
+            
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <p class="fs-5 fw-bold mb-5">Recent Classes</p>
             <a href="#" class="text-dark unstyled text-decoration-none">
-                <div class="d-flex justify-content-between my-4">
+                <div class="d-flex justify-content-between mt-4">
                     <p><img src="{% static 'res/icons/logo.png' %}" alt="" class="logo me-3 rounded-circle">EMT_ITN_xjw25</p>
                     <p class="text-muted">E. Tamayo</p>
                 </div>
-            </a>
-            <a href="#" class="text-dark unstyled text-decoration-none">
-                <div class="d-flex justify-content-between my-4">
-                    <p><img src="{% static 'res/icons/logo.png' %}" alt="" class="logo me-3 rounded-circle">EMT_ITN_xjw25</p>
-                    <p class="text-muted">E. Tamayo</p>
-                </div>
-            </a>
-            <a href="#" class="text-dark unstyled text-decoration-none ">
-                <div class="d-flex justify-content-between my-4">
-                    <p><img src="{% static 'res/icons/logo.png' %}" alt="" class="logo me-3 rounded-circle">EMT_ITN_xjw25</p>
-                    <p class="text-muted">E. Tamayo</p>
-                </div>
+                <hr class="mb-4 mt-0">
             </a>
         </div>
         <div class="col-md-4">
-            Hello3
+            <p class="fs-5 fw-bold mb-3">Feedback</p>
+            <div class="dropdown mb-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Select Class
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </div>
+            <p>Keep acing the Basic Configuration</p>
+            <hr class="my-0">
+            <p>Work more on your Routing then all is well!</p>
+            <hr class="my-0">
+            <p class="fw-bold fs-6 mt-4">Class Rank</p>
+            <div class="d-flex justify-content-center">
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">60%</p>
+                        <p class=" p-0 m-0">VLAN</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle3.png' %}" alt="" class="img-fluid">
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>
