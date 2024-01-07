@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
     'user.apps.UserConfig',
+    'activity.apps.ActivityConfig',
+    'classroom.apps.ClassroomConfig',
+    'help.apps.HelpConfig',
     'bootstrap5',
 ]
 

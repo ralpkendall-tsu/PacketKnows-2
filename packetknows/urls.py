@@ -23,6 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('user/', include('user.urls')),
+    path('activity/', include('activity.urls')),
+    path('classroom/', include('classroom.urls')),
+    path('help/', include('help.urls')),
 ]
 
 if settings.DEBUG:
