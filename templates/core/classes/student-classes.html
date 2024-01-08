@@ -1,0 +1,43 @@
+{% load static %}
+
+<div class="container">
+    <div class="row ms-2 mt-2 mb-4 ">
+        <h3 class="">My Classes</h3>
+    </div>
+    <div class="d-flex justify-content-between ms-2 me-5 mb-4">
+        <div class="d-flex fs-6">
+            <button type="button" class="btn">Active</button>
+            <button type="button" class="btn">Completed</button>
+        </div>
+        <div class="d-flex">
+            <input type="email" class="form-control w-100" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Class Code">
+            <button type="button" class="btn btn-success w-50">Join Now</button>
+        </div>
+    </div>
+    <div style="background-color: rgba(18, 18, 18, 0.06);" class="classes-panel rounded mt-5 p-5">
+        
+        <div class="row">
+            <div class="col-md-4 mb-3 px-3">
+                <div class="bg-white">
+                    <img src="{% static 'res/images/classIcons/1.jpg' %}" class="card-img-top" alt="...">
+                    <div class="card-body m-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="text-muted mt-2">ENSA</p>
+                            <a href="#" class="btn btn-danger">Leave Class</a>
+                        </div>
+                        <h5 class="card-title my-3 mb-4 text-wrap">RABAD_ENSA_HAHA_1999333333 333333333</h5>
+                        <div class="d-flex justify-content-around">
+                            <a href="#" class="btn btn-success">Training Mode</a>
+                            <a href="#" class="btn btn-success">Testing Mode</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+        </div>
+         
+    </div>
+
+</div>

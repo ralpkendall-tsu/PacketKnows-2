@@ -19,8 +19,6 @@ def DashboardView(request):
     context = {}
     if request.method == 'POST':
         pass
-    else:
-        context['userCategory'] = request.user.category.name
 
     return render(request, 'core/dashboard.html', context)
 

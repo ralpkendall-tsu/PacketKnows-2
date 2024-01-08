@@ -1,0 +1,10 @@
+.accordion-item.bg-red .accordion-button {
+    color: white;
+    background-color: #cb3737; /* Set the desired background color */
+}
+
+/* Custom styles for the accordion button when expanded */
+.accordion-item.bg-red.show .accordion-button {
+    color: white;
+    background-color: #cb3737; /* Set the desired background color when expanded */
+}

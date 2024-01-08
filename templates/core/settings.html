@@ -1,28 +1,30 @@
 {% extends 'core/base.html' %}
 
+{% block title %} Settings {% endblock %}
+
 {% block content %}
 
-
-    
-    {% include 'core/components/sidebar.html' %}
-    {% include 'core/components/topnav.html' %}
-    
-
-    <main class="col-md-9 ms-sm-auto col-lg-10 mt-5" >
-        <div class="row" >
-            <div class="col mt-1">
-                Settings
-                {% if user.category.name == "Student" %}
-                {{user.category}}
-                <h1 class="pb-5">Student</h1>
-                {% elif user.category == 'Instructor'%}
-                <h1 class="pb-5">Instructor</h1>
-                {% elif user.category == 'Self Learner'%}
-                <h1 class="pb-5">Self Learner</h1>
-                {% endif %}
-            </div>
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        
+        <div class="col-2 fixed-top bg-pink h-100" id="green">
+            {% include 'core/components/sidebar.html'%}
         </div>
-    </main>
+        <div class="col-md-10 ms-auto" style="padding: 0; overflow-x: hidden !important;">
+            {% include 'core/components/topnav.html'%}
+            
+            <main class="mt-5 pt-1">
+                {% if request.user.category.name == 'Student'%}
+                    {% include 'core/settings/student-settings.html'%}
+                {% elif request.user.category.name == 'Self Learner'%}
+                    {% include 'core/settings/selfLearner-settings.html'%}
+                {% elif request.user.category.name == 'Instructor'%}
+                    {% include 'core/settings/instructor-settings.html'%}
+                {% endif %}
+            </main>
 
-    
+        </div>
+    </div>
+</div>
+
 {% endblock %}

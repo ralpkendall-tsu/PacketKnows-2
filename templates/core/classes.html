@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
 
+{% block title %} Classes {% endblock %}
+
 {% block content %}
 
 <div class="container-fluid h-100">
@@ -12,11 +14,11 @@
             {% include 'core/components/topnav.html'%}
             
             <main class="mt-5 pt-1">
-                {% if userCategory == 'Student'%}
+                {% if request.user.category.name == 'Student'%}
                     {% include 'core/classes/student-classes.html'%}
-                {% elif userCategory == 'Self Learner'%}
+                {% elif request.user.category.name == 'Self Learner'%}
                     {% include 'core/classes/selfLearner-classes.html'%}
-                {% elif userCategory == 'Instructor'%}
+                {% elif request.user.category.name == 'Instructor'%}
                     {% include 'core/classes/instructor-classes.html'%}
                 {% endif %}
             </main>

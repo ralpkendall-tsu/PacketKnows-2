@@ -1,0 +1,38 @@
+{% load static %}
+
+<div class="container">
+    <div class="row ms-2 mt-2 mb-5 ">
+        <h3 class="">Profile</h3>
+    </div>
+    <div class="mx-5 px-3">
+        <h5 class="mb-4">Update Profile</h5>
+        <div class="d-flex justify-content-center">
+            <img class="profile-icon" src="{% static 'res/images/developers/JDCD.png' %}" alt="" class="img-fluid">
+        </div>
+
+        <div class="row my-4">
+            <div class="col-md-6 d-flex flex-column">
+                <label class="mb-2" for="">First Name</label>
+                <input class="form-control" type="text" placeholder="Juan">
+            </div>
+            <div class="col-md-6 d-flex flex-column">
+                <label class="mb-2" for="">Last Name</label>
+                <input class="form-control" type="text" placeholder="Dela Cruz">
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-md-6 d-flex flex-column">
+                <label class="mb-2" for="">Email</label>
+            <input class="form-control" type="text" placeholder="juandelacruz69@gmail.com">
+            </div>
+            
+        </div>
+        
+        <div class="col-md-2 mt-4">  
+            <button class="btn btn-success w-100" type="submit">Save</button>
+        </div>
+    </div>
+    
+   
+    
+</div>
