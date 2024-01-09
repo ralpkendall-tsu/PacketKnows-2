@@ -1,3 +1,49 @@
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from user.models import CustomUser
+from .models import StudentIDChange
 
 # Create your views here.
+def ChangePassword(request):
+    if request.method == 'POST':
+        userEmail = request.user.email
+        oldPassword = request.POST.get('oldPassword')
+        newPassword = request.POST.get('newPassword')
+        confirmPassword = request.POST.get('confirmPassword')
+        
+        user = CustomUser.objects.get(email=userEmail)
+        
+        if user:
+            # Check if the old password matches
+            if user.check_password(oldPassword):
+                # Check if the new password and confirm password match
+                if newPassword == confirmPassword:
+                    # Change the password
+                    user.set_password(newPassword)
+                    user.save()
+                    return JsonResponse({'success': True, 'message': 'Password changed successfully'})
+                else:
+                    return JsonResponse({'success': False, 'message': 'New password and confirm password do not match'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Old password is incorrect'})
+        else:
+            return JsonResponse({'success': False, 'message': 'User not found'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+def UpdateStudentNumber(request):
+    if request.method == 'POST':
+        newID = request.POST.get('newID')
+        userEmail = request.user.email
+
+        # Check if newID is composed of only numbers
+        if not newID.isdigit():
+            return JsonResponse({'success': False, 'message': 'Invalid newID. Please provide a numeric value.'})
+
+        # Create a StudentIDChange record
+        studentIDChange = StudentIDChange.objects.create(student=request.user, new_school_id=newID)
+
+        return JsonResponse({'success': True, 'message': 'The admin has been notified. Please wait for it to reflect.'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})
+        

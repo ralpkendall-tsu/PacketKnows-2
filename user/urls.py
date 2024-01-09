@@ -8,4 +8,5 @@ urlpatterns = [
     path('login/', userViews.CustomLoginView.as_view(), name='login'),
     path('', include('django.contrib.auth.urls')),
     path('signup/', userViews.SignupView, name='signup'),   
+    path('update-profile/', userViews.UpdateProfileView, name='updateProfile'),   
 ]

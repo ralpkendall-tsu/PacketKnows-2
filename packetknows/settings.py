@@ -142,3 +142,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 LOGIN_REDIRECT_URL = 'core:dashboard'
 LOGOUT_REDIRECT_URL = '/'
+
+DOMAIN = 'http://127.0.0.1:80/'
+DOMAIN_MEDIA = 'http://127.0.0.1:80/media/'
+
+SIMULATION_DOMAIN = 'http://3.27.228.226:3080/'

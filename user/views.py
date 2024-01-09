@@ -4,6 +4,9 @@ from .forms import CustomLoginForm, CustomUserForm
 from django.contrib.auth import login, authenticate, logout
 from .models import UserCategory, CustomUser
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 # Create your views here.
 class CustomLoginView(LoginView):
@@ -41,4 +44,25 @@ def SignupView(request):
         context['showSignupModal'] = True
 
     return render(request, 'core/landing-page.html', context)
+
+def UpdateProfileView(request):
+    if request.method == "POST":
+        firstName = request.POST.get('firstName')
+        lastName = request.POST.get('lastName')
+        icon = request.FILES.get('icon') 
+        print(icon)
+        if firstName and lastName and icon:
+            user = CustomUser.objects.get(email=request.user.email)
+            print(user.icon)
+            user.first_name = firstName
+            user.last_name = lastName
+            file_name = default_storage.save(icon.name, ContentFile(icon.read()))
+            user.icon = file_name 
+            user.save()
+
+            return JsonResponse({'success': True, 'message': 'Profile updated successfully!'})
+        else:
+            return JsonResponse({'success': False, 'message': 'Invalid data provided'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})
 

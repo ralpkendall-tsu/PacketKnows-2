@@ -5,39 +5,43 @@
         <h3 class="">My Classes</h3>
     </div>
     <div class="d-flex justify-content-between ms-2 me-5 mb-4">
-        <div class="d-flex fs-6">
-            <button type="button" class="btn">Active</button>
-            <button type="button" class="btn">Completed</button>
+        <div class="d-flex fs-6 button-container">
+            <button id="activeBtn" class="btn" hx-trigger="click" hx-get="{% url 'classroom:activeClasses' %}" hx-target="#classes-panel">Active</button>
+            <button id="completedBtn" class="btn" hx-trigger="click" hx-get="{% url 'classroom:completedClasses' %}" hx-target="#classes-panel">Completed</button>
         </div>
-        <div class="d-flex">
-            <input type="email" class="form-control w-100" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Class Code">
-            <button type="button" class="btn btn-success w-50">Join Now</button>
-        </div>
-    </div>
-    <div style="background-color: rgba(18, 18, 18, 0.06);" class="classes-panel rounded mt-5 p-5">
-        
-        <div class="row">
-            <div class="col-md-4 mb-3 px-3">
-                <div class="bg-white">
-                    <img src="{% static 'res/images/classIcons/1.jpg' %}" class="card-img-top" alt="...">
-                    <div class="card-body m-0">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="text-muted mt-2">ENSA</p>
-                            <a href="#" class="btn btn-danger">Leave Class</a>
-                        </div>
-                        <h5 class="card-title my-3 mb-4 text-wrap">RABAD_ENSA_HAHA_1999333333 333333333</h5>
-                        <div class="d-flex justify-content-around">
-                            <a href="#" class="btn btn-success">Training Mode</a>
-                            <a href="#" class="btn btn-success">Testing Mode</a>
-                        </div>
-                    </div>
-                </div>
+        <form hx-post="{% url 'classroom:classes'%}" hx-swap="none">
+            {% csrf_token %}
+            <div class="d-flex">
+                <input name="classCode" type="text" class="form-control w-100" id="classCodeRegister" aria-describedby="classCodeRegister" placeholder="Class Code">
+                <button type="submit" class="btn btn-success w-50">Join Now</button>
+            
             </div>
-            
-            
-            
-        </div>
-         
+        </form>
+    </div>
+    <div id="classes-panel" style="background-color: rgba(18, 18, 18, 0.06);" class="classes-panel rounded mt-5 p-5">
+    
     </div>
 
 </div>
+
+
+
+<script>
+    document.addEventListener('htmx:afterRequest', function(evt) {
+        try {
+            console.log(evt)
+            const response = JSON.parse(evt.detail.xhr.response);
+            alert(response.message);
+
+            if (evt.detail.xhr.status === 200) {
+                location.reload(true);
+            }
+        } catch (error) {
+            console.error('Error parsing JSON response:', error);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('activeBtn').click();
+    });
+</script>

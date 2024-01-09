@@ -12,14 +12,38 @@
                             Change Password
                         </button>
                     </h2>
-                    <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionExample">
-                        <div class="accordion-body d-flex flex-row gap-2">
-                           <input class="form-control" type="text" placeholder="Enter your old password">
-                           <input class="form-control" type="text" placeholder="Enter your new password">
-                           <input class="form-control" type="text" placeholder="Confirm new password">
-                           <button class="btn btn-light ">Verify</button>
+                    <form method="post" hx-post="{% url 'help:changePassword' %}" hx-swap="none" hx-target="#collapse1">
+                        {% csrf_token %}
+                        <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionExample">
+                            <div class="accordion-body d-flex flex-row gap-2">
+                    
+                                <div class="input-group">
+                                    <input type="password" class="form-control" name="oldPassword" id="oldPasswordInput" placeholder="Enter your old password" aria-label="Password" aria-describedby="showPasswordToggle">
+                                    <button class="btn btn-light" type="button" id="showOldPasswordToggle" onclick="toggleOldPasswordVisibility()">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                    
+                                <div class="input-group">
+                                    <input type="password" class="form-control" name="newPassword" id="newPasswordInput" placeholder="Enter your new password" aria-label="Password" aria-describedby="showPasswordToggle">
+                                    <button class="btn btn-light" type="button" id="showNewPasswordToggle" onclick="toggleNewPasswordVisibility()">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                    
+                                <div class="input-group">
+                                    <input type="password" class="form-control" name="confirmPassword" id="confirmPasswordInput" placeholder="Confirm new password" aria-label="Password" aria-describedby="showPasswordToggle">
+                                    <button class="btn btn-light" type="button" id="showConfirmPasswordToggle" onclick="toggleConfirmPasswordVisibility()">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                    
+                                <button type="submit" class="btn btn-light">Verify</button>
+                    
+                            </div>
                         </div>
-                    </div>
+                    </form>
+                    
                 </div>
             </div>
 
@@ -31,10 +55,14 @@
                         </button>
                     </h2>
                     <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionExample">
-                        <div class="accordion-body d-flex flex-row gap-2">
-                           <input class="form-control" type="text" placeholder="Enter your ID">
-                           <button class="btn btn-light w-25 ">Send Reset Link</button>
-                        </div>
+                        <form hx-post="{% url 'help:updateStudentNumber'%}" hx-swap="none">
+                            {%csrf_token%}
+                            <div class="accordion-body d-flex flex-row gap-2">
+                                <input name="newID" class="form-control" type="text" placeholder="Enter your ID">
+                                <button class="btn btn-light w-25 ">Send Request</button>
+                             </div>
+                        </form>
+                        
                     </div>
                 </div>
             </div>
@@ -49,23 +77,22 @@
                     <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionExample">
                         <div class="accordion-body d-flex flex-row gap-2 align-items-center">
                             <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Select a course
+                                <button class="btn btn-light dropdown-toggle" type="button" id="classDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select a class
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                  <li><a class="dropdown-item" href="#">Action</a></li>
-                                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <ul class="dropdown-menu" aria-labelledby="classDropdownButton" hx-get="{% url 'activity:activities' %}?class_id=" hx-trigger="change" hx-target="#activityDropdown">
+                                    {% for classroom in request.user.enrolled_classrooms.all %}
+                                        <li id=' {{classroom.id}}'class="dropdown-item" data-classroom-id="{{ classroom.id }}">{{ classroom.name }}</li>
+                                    {% endfor %}
                                 </ul>
                             </div>
+                            
                             <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Select an Activity
+                                <button class="btn btn-light dropdown-toggle" type="button" id="activityDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select an Activity
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                  <li><a class="dropdown-item" href="#">Action</a></li>
-                                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <ul class="dropdown-menu" aria-labelledby="activityDropdownButton" id="activityDropdown">
+                                    <!-- Activities will be populated dynamically after selecting a class -->
                                 </ul>
                             </div>
                            <input class="form-control" type="text" placeholder="Reason for reactivation">
@@ -78,3 +105,90 @@
     </section>
 
 </div>
+
+<script>
+    document.addEventListener('htmx:afterRequest', function(evt) {
+       
+        const response = JSON.parse(event.detail.xhr.response);
+        const sourceElement = event.detail.elt;
+
+        if (sourceElement.id === 'classDropdownButton') {
+            // Code for handling htmx response from the class dropdown
+            const activityDropdown = document.getElementById('activityDropdown');
+            activityDropdown.innerHTML = '';
+
+            // Populate options based on the response
+            response.activities.forEach(function (activity) {
+                const li = document.createElement('li');
+                li.innerHTML = `<a class="dropdown-item" href="#">${activity.name}</a>`;
+                activityDropdown.appendChild(li);
+            });
+        } else {
+            try {
+                console.log(evt)
+                const response = JSON.parse(evt.detail.xhr.response);
+                alert(response.message);
+            } catch (error) {
+                console.error('Error parsing JSON response:', error);
+            }
+        }
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const classDropdown = document.getElementById('classDropdownButton');
+
+        classDropdown.addEventListener('change', function () {
+            const selectedClassId = classDropdown.querySelector(':checked').dataset.classroomId;
+            const activityDropdown = document.getElementById('activityDropdown');
+
+            // Update the hx-get URL with the selected class id
+            const hxGetUrl = `${classDropdown.getAttribute('hx-get')}${selectedClassId}`;
+            activityDropdown.setAttribute('hx-get', hxGetUrl);
+
+            // Trigger an htmx request for the activity dropdown
+            activityDropdown.click();
+        });
+    });
+
+
+    
+    function toggleOldPasswordVisibility() {
+        const passwordInput = document.getElementById('oldPasswordInput');
+        const showPasswordToggle = document.getElementById('showOldPasswordToggle');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            showPasswordToggle.innerHTML = '<i class="fa-regular fa-eye-slash"></i>';
+        } else {
+            passwordInput.type = 'password';
+            showPasswordToggle.innerHTML = '<i class="fa-regular fa-eye"></i>';
+        }
+    }
+
+    function toggleNewPasswordVisibility() {
+        const passwordInput = document.getElementById('newPasswordInput');
+        const showPasswordToggle = document.getElementById('showNewPasswordToggle');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            showPasswordToggle.innerHTML = '<i class="fa-regular fa-eye-slash"></i>';
+        } else {
+            passwordInput.type = 'password';
+            showPasswordToggle.innerHTML = '<i class="fa-regular fa-eye"></i>';
+        }
+    }
+
+    function toggleConfirmPasswordVisibility() {
+        const passwordInput = document.getElementById('confirmPasswordInput');
+        const showPasswordToggle = document.getElementById('showConfirmPasswordToggle');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            showPasswordToggle.innerHTML = '<i class="fa-regular fa-eye-slash"></i>';
+        } else {
+            passwordInput.type = 'password';
+            showPasswordToggle.innerHTML = '<i class="fa-regular fa-eye"></i>';
+        }
+    }
+</script>

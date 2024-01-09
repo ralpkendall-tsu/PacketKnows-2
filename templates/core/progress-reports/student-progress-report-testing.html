@@ -1,0 +1,112 @@
+{% load static %}
+
+<div class="container">
+    <div class="row ms-2 mt-2 mb-4 ">
+        <div class="col-md-4 ">
+            <div class="d-flex align-items-center text-center">
+                <a class="mb-1" href="{% url 'core:classes'%}"><i class="fa-solid fa-xl fa-circle-arrow-left" style="color: #761E1E;"></i></a>
+                <h3 class="ms-3">Progress Report</h3>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mt-5">
+                <p class="fw-bold fs-5">Grade Item</p>
+                <p class="fw-bold ">{{classroom.code}}</p>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <p class="fs-5">Exam</p>
+                <p class="fs-5">Percentage</p>
+            </div>
+            {%for exam in grades.testing_percentages%}
+            <hr>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <p class="">{{exam.number}} - {{exam.name}}</p>
+                <p class="">{{exam.total_percentage}}%</p>
+            </div>
+            {% endfor%}
+
+            <hr>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <p class="text-success fw-bold">Grade Total Average</p>
+                <p class="text-success fw-bold">{{grades.total_testing_percentage}}%</p>
+            </div>
+
+        </div>
+
+        <div class="col-md-7 ms-5">
+            <div class="d-flex mb-5">
+                <a href="{% url 'core:progressReportTraining' classroom.code %}"><button id="trainingBtn" class="btn me-3">Training</button></a>
+                <a href="{% url 'core:progressReportTesting' classroom.code %}"><button id="testingBtn" class="btn">Testing</button></a>
+            </div>
+
+            <div class="fw-bold">
+                Grade Average
+            </div>
+
+            <div class="text-muted">
+                Percentage of Activity
+            </div>
+
+            <div class="mb-2" id="grade-average-chart">
+                <!-- JS Chart will be placed here -->
+            </div>
+            <hr>
+
+            <div class="fw-bold fs-5">
+                Strength Rating
+            </div>
+
+            <div class="text-muted">
+                Based on all of the exams taken
+            </div>
+
+            <div class="d-flex align-items-center justify-content-center">
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">{{ grades.top_testing_categories.1.average_percentage }}%</p>
+                        <p class=" p-0 m-0">{{grades.top_testing_categories.1.name}}</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle2.png' %}" alt="" class="img-fluid">
+                </div>
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">{{grades.top_testing_categories.0.average_percentage}}%</p>
+                        <p class=" p-0 m-0">{{grades.top_testing_categories.0.name}}</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle.png' %}" alt="" class="img-fluid">
+                </div>
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">{{grades.top_testing_categories.2.average_percentage}}%</p>
+                        <p class=" p-0 m-0">{{grades.top_testing_categories.2.name}}</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle3.png' %}" alt="" class="img-fluid">
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var options = {
+  chart: {
+    type: 'line'
+  },
+  series: [{
+    name: 'sales',
+    data: [30,40,35,50,49,60,70,91,125]
+  }],
+  xaxis: {
+    categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+  }
+}
+
+var chart = new ApexCharts(document.querySelector("#grade-average-chart"), options);
+
+chart.render();
+    });
+</script>

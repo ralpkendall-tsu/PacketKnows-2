@@ -22,6 +22,8 @@ class ActivityCategory(models.Model):
 
 class BaseActivity(models.Model):
     number = models.CharField(max_length=4)
+    name = models.CharField(max_length=255)
+    projectID = models.CharField(max_length=255, unique=True)
     answer_key = models.TextField(blank=True,null=True)
     category = models.ForeignKey(ActivityCategory, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -42,6 +44,7 @@ class BaseActivity(models.Model):
     
 class Activity(models.Model):
     base_activity = models.ForeignKey(BaseActivity, on_delete=models.CASCADE)
+    projectID = models.CharField(max_length=255, unique=True)
     mode = models.CharField(max_length=50)
     physical_points = models.PositiveIntegerField()
     basic_config_points = models.PositiveIntegerField()

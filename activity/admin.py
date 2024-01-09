@@ -22,7 +22,6 @@ class BaseActivityAdmin(admin.ModelAdmin):
     list_display = ('number', 'category', 'course', 'time_limit')
     search_fields = ('number', 'category__name', 'course__name')
     list_filter = ('category', 'course')
-    readonly_fields = ('course',)
 
 admin.site.register(BaseActivity, BaseActivityAdmin)
 

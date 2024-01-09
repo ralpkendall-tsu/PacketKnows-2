@@ -1,0 +1,15 @@
+{% load static %}
+
+<div class="container me-2">
+    <div class="row ms-2 mt-2 mb-4 ">
+        <div class="col-md-4 ">
+            <a class="mb-1" href="javascript:history.back()"><i class="fa-solid fa-xl fa-circle-arrow-left" style="color: #761E1E;"></i></a>
+        </div>
+    </div>
+
+    {% with dynamic_url=settings.YOUR_DYNAMIC_URL_SETTING %}
+    <iframe title="hello" src="{{ dynamic_url }}static/web-ui/server/1/project/{{activity.id}}" width="1200" height="650"></iframe>
+    {% endwith %}
+
+    <iframe title="hello" src="http://3.27.228.226:3080/static/web-ui/server/1/project/08627e62-5e24-48fe-97ab-a7f16868686f" width="1200" height="650"></iframe>
+</div>

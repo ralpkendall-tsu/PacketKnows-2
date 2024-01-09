@@ -4,3 +4,27 @@
     object-fit: cover;
     border-radius: 75px;
 }
+
+.profileContainer {
+    position: relative;
+}
+
+.profileContainer:hover{
+    opacity: .4;
+}
+
+.change-image-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profileContainer:hover .change-image-text {
+    opacity: 1;
+}

@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Progress Report {% endblock %}
+
+{% block content %}
+
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        
+        <div class="col-2 fixed-top bg-pink h-100" id="green">
+            {% include 'core/components/sidebar.html'%}
+        </div>
+        <div class="col-md-10 ms-auto" style="padding: 0; overflow-x: hidden !important;">
+            {% include 'core/components/topnav.html'%}
+            
+            <main class="mt-5 pt-1">
+                {% if request.user.category.name == 'Student'%}
+                    {% include 'core/progress-reports/student-progress-report-training.html'%}
+                {% elif request.user.category.name == 'Self Learner'%}
+                    {% include 'core/progress-reports/selfLearner-progress-report-training.html'%}
+                {% elif request.user.category.name == 'Instructor'%}
+                    {% include 'core/progress-reports/instructor-progress-report-training.html'%}
+                {% endif %}
+            </main>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

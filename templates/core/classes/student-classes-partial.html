@@ -1,0 +1,36 @@
+<div class="row">
+    {% for classroom in classes%}
+    <div class="col-md-4 mb-3 px-3">
+        <div class="bg-white">
+            <a class="class-icon-container" href="{% url 'core:progressReportTraining' classroom.code %}" onmouseover="showProgressReport(this)" onmouseout="hideProgressReport(this)">
+                <p id="progress-report-label" class="progress-report-label bg-light rounded text-dark-red p-3 fw-bold" style="display: none;">View Progress</p>
+                <img src="{{classroom.icon.url}}" class="card-img-top class-icon" alt="..." >
+            </a>
+            <div class="card-body m-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="text-muted mt-2">{{classroom.course.slug}}</p>
+                    <a href="#" class="btn btn-danger" hx-delete="{% url 'classroom:classroom' classroom.id%}">Leave Class</a>
+                </div>
+                <h5 class="card-title my-3 mb-4 text-wrap">{{classroom.name}}</h5>
+                <div class="d-flex justify-content-around">
+                    <a href="{% url 'core:examList' classSlug=classroom.code mode='training'%}" class="btn btn-success">Training Mode</a>
+                    <a href="{% url 'core:examList' classSlug=classroom.code mode='testing'%}" class="btn btn-success">Testing Mode</a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function showProgressReport(element) {
+        const progressReport = document.querySelector('.progress-report-label');
+        progressReport.style.display = 'block';
+    }
+
+    function hideProgressReport(element) {
+        const progressReport = document.querySelector('.progress-report-label');
+        progressReport.style.display = 'none';
+    }
+</script>
