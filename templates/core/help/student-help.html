@@ -75,29 +75,25 @@
                         </button>
                     </h2>
                     <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionExample">
-                        <div class="accordion-body d-flex flex-row gap-2 align-items-center">
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="classDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Select a class
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="classDropdownButton" hx-get="{% url 'activity:activities' %}?class_id=" hx-trigger="change" hx-target="#activityDropdown">
-                                    {% for classroom in request.user.enrolled_classrooms.all %}
-                                        <li id=' {{classroom.id}}'class="dropdown-item" data-classroom-id="{{ classroom.id }}">{{ classroom.name }}</li>
+                        <form hx-post="{% url 'help:testReactivation'%}" hx-target="#tinatago">
+                            <div id="tinatago" style="display:none;"></div>
+                            <div class="accordion-body d-flex flex-row gap-2 align-items-center">
+                                <select name="classroomID" class="form-select" id="classSelect" aria-label="Select Now" hx-target="#activitySelect" hx-get="{% url 'activity:activityOptions' %}" hx-trigger="change">
+                                    {% for classroom in classrooms %}
+                                    <option value="{{classroom.id}}" selected>{{classroom.name}}</option>
                                     {% endfor %}
-                                </ul>
+                                    <option value="" selected>Select a class</option>
+                                </select>
+                                
+                                <select name="activityID" class="form-select" id="activitySelect" aria-label="Select Now" hx-get="/get-options/" hx-trigger="change">
+                                    <option value="" selected>Select an activity</option>
+                                    <!-- Options will be dynamically added here -->
+                                </select>
+
+                                <input name="message" class="form-control" type="text" placeholder="Reason for reactivation">
+                                <button type="submit" class="btn btn-light">Send</button>
                             </div>
-                            
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="activityDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Select an Activity
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="activityDropdownButton" id="activityDropdown">
-                                    <!-- Activities will be populated dynamically after selecting a class -->
-                                </ul>
-                            </div>
-                           <input class="form-control" type="text" placeholder="Reason for reactivation">
-                           <button class="btn btn-light ">Send</button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -191,4 +187,5 @@
             showPasswordToggle.innerHTML = '<i class="fa-regular fa-eye"></i>';
         }
     }
+
 </script>

@@ -1,4 +1,5 @@
 {% load static %}
+{% load simulation_tags %}
 
 <div class="container me-2">
     <div class="row ms-2 mt-2 mb-4 ">
@@ -7,9 +8,20 @@
         </div>
     </div>
 
-    {% with dynamic_url=settings.YOUR_DYNAMIC_URL_SETTING %}
-    <iframe title="hello" src="{{ dynamic_url }}static/web-ui/server/1/project/{{activity.id}}" width="1200" height="650"></iframe>
-    {% endwith %}
+    <iframe title="hello" src="{% gns3_project_url activity=activity.projectID %}" width="1200" height="650"></iframe>
 
-    <iframe title="hello" src="http://3.27.228.226:3080/static/web-ui/server/1/project/08627e62-5e24-48fe-97ab-a7f16868686f" width="1200" height="650"></iframe>
+    <div class="d-flex justify-content-between bg-dark-red px-3 mt-2" style="width:1200px;">
+        <div>
+            {{activity.base_activity.number}} - {{activity.base_activity.course.slug}} - {{activity.base_activity.name}}
+        </div>
+        <div id="timer-container">
+            <p>Time passed: <span id="timer">0:00</span></p>
+        </div>
+        <div>
+            <button class="btn">Restart</button>
+            <button class="btn">Save</button>
+            <button class="btn">Scores</button>
+            <button class="btn text-success">Submit</button>
+        </div>
+    </div>
 </div>

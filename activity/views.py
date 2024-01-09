@@ -2,6 +2,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from .models import Activity
 from classroom.models import Enrollment, Classroom 
+from django.db.models import Avg, Count
+from django.db.models.functions import Coalesce
 
 # Create your views here.
 def ActivityView(request):
@@ -30,8 +32,121 @@ def ActivityView(request):
             # Handle the case where class_id is not provided or not a valid integer
             return HttpResponse('Invalid or missing class_id', status=400)
         
+def ActivityOptions(request):
+    context={}
+    if request.method == 'POST':
+        # Handle POST requests if needed
+        pass
+    else:
+        
+        classroom_id = request.GET.get('classroomID', None)
+        enrollment = Enrollment.objects.get(student=request.user, classroom_id=classroom_id)
+        activities = enrollment.activities.all()
+        
+        context["activities"] = activities
+        
+        return render(request, 'core/help/student-help-activity-partial.html', context)
+    
+def compute_student_rank(student, classroom):
+    enrollments = Enrollment.objects.filter(classroom=classroom)
+    studentFinalGrades = []
+    for enrollment in enrollments:
+        student = enrollment.student
+        trainingReport = computeTrainingProgressReport(student=student,classroom=classroom)
+        testingReport = computeTestingProgressReport(student=student,classroom=classroom)
+        studentFinalGrade = round((trainingReport["total_training_percentage"] + testingReport["total_testing_percentage"]) / 2, 2)
+        studentGrade = {
+            "id": student.id,
+            "finalGrade": studentFinalGrade
+        }
+        studentFinalGrades.append(studentGrade)
+        
+    sorted_student_final_grades = sorted(studentFinalGrades, key=lambda x: x['finalGrade'], reverse=True)
+    user_rank = next((index + 1 for index, student_grade in enumerate(sorted_student_final_grades) if student_grade['id'] == student.id), None)
+
+    
+    return user_rank
+        
+    
+    
+        
+def computeSingleActivityScore(student, activity_id):
+    try:
+        result = {
+            'labels': [],
+            'data': [],
+        }
+
+        # Assuming activity_id is unique per activity
+        activity = Activity.objects.get(id=activity_id)
+
+        # Assuming the activity has a related base_activity
+        base_activity = activity.base_activity
+
+        # Assuming you want to calculate the scores for the 5 categories
+        category_percentages = {
+            'physical_percentage': round((activity.physical_points / base_activity.max_physical_points) * 100, 2),
+            'basic_config_percentage': round((activity.basic_config_points / base_activity.max_basic_config_points) * 100, 2),
+            'ip_percentage': round((activity.ip_points / base_activity.max_ip_points) * 100, 2),
+            'routing_percentage': round((activity.routing_points / base_activity.max_routing_points) * 100, 2),
+            'other_percentage': round((activity.other_points / base_activity.max_other_points) * 100, 2),
+        }
+
+        # Populate the labels and data for the bar chart
+        for category, percentage in category_percentages.items():
+            result['labels'].append(category.replace('_percentage', '').capitalize())
+            result['data'].append(percentage)
+
+        return result
+
+    except Activity.DoesNotExist:
+        return None
+        
+def update_chart_data(request, mode):
+    average_progress = computeAverageClassProgress(request.user, mode)
+
+    data = average_progress['averages']
+    labels = average_progress['class_names']
+
+    return JsonResponse({'chartData': data, 'chartLabels': labels})
         
 
+def computeAverageClassProgress(student, mode):
+    result = {
+        'class_names': [],
+        'averages': [],
+    }
+
+    try:
+        enrollments = Enrollment.objects.filter(student=student)
+        for enrollment in enrollments:
+            activities = enrollment.activities.filter(mode=mode)
+
+            if activities.exists():
+                class_average = sum(calculatePercentage(activity)['total_percentage'] for activity in activities) / len(activities)
+                result['class_names'].append(enrollment.classroom.name)
+                result['averages'].append(round(class_average, 2))
+
+    except Enrollment.DoesNotExist:
+        return None
+
+    return result
+
+def computeClassStrengthRating(student, classroom):
+    try:
+        all_activities = []
+
+        enrollments = Enrollment.objects.filter(student=student, classroom=classroom)
+        for enrollment in enrollments:
+            all_activities.extend(enrollment.activities.all())
+        all_percentages = [calculatePercentage(activity) for activity in all_activities]
+        top_categories = computeTopCategories(all_percentages)
+
+        return top_categories
+
+    except Enrollment.DoesNotExist:
+        return None
+    
 def computeOverallStrengthRating(student):
     try:
         all_activities = []
@@ -66,12 +181,10 @@ def computeTopCategories(activities):
     # Sort the categories based on average_percentage in descending order
     sorted_categories = sorted(average_percentages.items(), key=lambda x: x[1], reverse=True)
 
-    # Take only the top 3 categories
-    top_categories = sorted_categories[:3]
 
     result = []
 
-    for category in top_categories:
+    for category in sorted_categories:
         result.append({
             'name': category[0].replace('_percentage', '').capitalize(),
             'average_percentage': round(category[1], 2) if category[1] is not None else None

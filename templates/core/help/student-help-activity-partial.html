@@ -1,0 +1,3 @@
+{% for activity in activities %}
+<option value="{{activity.id}}" selected>{{activity.base_activity.number}} - {{activity.base_activity.name}}</option>
+{% endfor %}

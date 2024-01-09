@@ -1,0 +1,26 @@
+{% load static %}
+
+<p>Keep acing the {{feedback.bestCategory}} category</p>
+<hr class="my-0">
+<p>Work more on your {{feedback.worstCategory}} then all is well!</p>
+<hr class="my-0">
+<p class="fw-bold fs-6 mt-4">Class Rank</p>
+<div class="d-flex justify-content-center text-dark-red ">
+    <div class="rating rating-1 d-inline-block ">
+        <div class="rating-label ">
+            <p class="fs-3 p-0 m-0 mb-2 fw-bold">{{feedback.classRank}}</p>
+            {% if feedback.classRank < 5 %}
+            <p class=" p-0 m-0 fw-regular">Outstanding!</p>
+            {% elif feedback.classRank < 10 %}
+            <p class=" p-0 m-0 fw-regular">Excellent!</p>
+            {% elif feedback.classRank < 15 %}
+            <p class=" p-0 m-0 fw-regular">Remarkable!</p>
+            {% elif feedback.classRank < 20 %}
+            <p class=" p-0 m-0 fw-regular">Good Job!</p>
+            {% endif %}
+        </div>
+        <img src="{% static 'res/icons/Dashboard/Dashboard-circle4.png' %}" alt="" class="img-fluid">
+    </div>
+</div>
+
+{{feedback}}

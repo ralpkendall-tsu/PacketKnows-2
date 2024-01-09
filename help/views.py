@@ -1,7 +1,8 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseServerError, JsonResponse
 from django.shortcuts import render
 from user.models import CustomUser
-from .models import StudentIDChange
+from .models import StudentIDChange, TestReactivation
+from activity.models import Activity
 
 # Create your views here.
 def ChangePassword(request):
@@ -46,4 +47,20 @@ def UpdateStudentNumber(request):
         return JsonResponse({'success': True, 'message': 'The admin has been notified. Please wait for it to reflect.'})
 
     return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+def TestReactivationView(request):
+    if request.method == 'POST':
+        try:
+            activityID = request.POST.get("activityID")
+            message = request.POST.get("message")
+            
+            activity = Activity.objects.get(id=activityID)
+            testReactivation = TestReactivation.objects.create(activity=activity, message=message)
+
+            return JsonResponse({"message": "Test reactivation created successfully"}, status=200)
+        except Activity.DoesNotExist:
+            return JsonResponse({"error": "Activity does not exist"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+        
         

@@ -1,6 +1,11 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+
+from activity.models import Activity
 from .models import Enrollment, Classroom
+from django.db.models import Avg
+from django.db.models.functions import Coalesce
+from activity.views import computeClassStrengthRating, compute_student_rank
 
 # Create your views here.
 def activeClasses(request):
@@ -40,3 +45,22 @@ def ClassroomView(request, id):
     else:
         # Handle other HTTP methods if needed
         return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+def ClassOverAllFeedbackView(request):
+    context = {}
+    if request.method == "POST":
+        pass
+    else:
+        classID = request.GET.get('classroomID')
+
+        classroom = Classroom.objects.get(id=classID)
+        strengthRating = computeClassStrengthRating(student=request.user,classroom=classroom)
+
+        feedback = {}
+        feedback["bestCategory"] = strengthRating[0].get("name")
+        feedback["worstCategory"] = strengthRating[-1].get("name")
+        feedback["classRank"] = compute_student_rank(request.user, classroom)
+
+        context['feedback'] = feedback
+
+    return render(request, 'core/dashboards/student-dashboard-feedback-partial.html', context)

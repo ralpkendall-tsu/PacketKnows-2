@@ -16,13 +16,21 @@
                 <p class="fs-5">Exam</p>
                 <p class="fs-5">Percentage</p>
             </div>
-            {%for exam in grades.testing_percentages%}
+            {% for exam in grades.testing_percentages %}
             <hr>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-                <p class="">{{exam.number}} - {{exam.name}}</p>
-                <p class="">{{exam.total_percentage}}%</p>
-            </div>
-            {% endfor%}
+            <button id="exam_{{ exam.id }}" class="btn exam-div d-flex w-100 justify-content-between align-items-center mt-2"
+                 data-exam-number="{{ exam.number }}"
+                 data-exam-name="{{ exam.name }}"
+                 data-physical-percentage="{{ exam.physical_percentage }}"
+                 data-basic-config-percentage="{{ exam.basic_config_percentage }}"
+                 data-ip-percentage="{{ exam.ip_percentage }}"
+                 data-routing-percentage="{{ exam.routing_percentage }}"
+                 data-other-percentage="{{ exam.other_percentage }}"
+                 data-total-percentage="{{ exam.total_percentage }}">
+                <p class="">{{ exam.number }} - {{ exam.name }}</p>
+                <p class="">{{ exam.total_percentage }}%</p>
+            </button>
+            {% endfor %}
 
             <hr>
             <div class="d-flex justify-content-between align-items-center mt-2">
@@ -46,8 +54,13 @@
                 Percentage of Activity
             </div>
 
-            <div class="mb-2" id="grade-average-chart">
-                <!-- JS Chart will be placed here -->
+            <div id="dashboard-chart"
+                data-chart-type="bar"
+                data-chart-name="percentage"
+                data-chart-data="{{barChartData}}"
+                data-chart-labels="{{barChartLabels}}"
+            >
+            <!-- JS Chart will be placed here -->
             </div>
             <hr>
 
@@ -90,23 +103,73 @@
 
 
 <script>
-
     document.addEventListener('DOMContentLoaded', function () {
-        var options = {
-  chart: {
-    type: 'line'
-  },
-  series: [{
-    name: 'sales',
-    data: [30,40,35,50,49,60,70,91,125]
-  }],
-  xaxis: {
-    categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
-  }
-}
+       var chartDiv = document.getElementById("dashboard-chart");
+   
+       var options = {
+           chart: {
+               type: chartDiv.dataset.chartType
+           },
+           series: [{
+               name: chartDiv.dataset.chartName,
+               data: JSON.parse(chartDiv.dataset.chartData),
+               color: '#761E1E' // Set the color of the bars to red
+           }],
+           xaxis: {
+               categories: JSON.parse(chartDiv.dataset.chartLabels)
+           },
+           yaxis: {
+               max: 100 // Set the maximum value on the y-axis to 100
+           }
+       };
+   
+       var chart = new ApexCharts(chartDiv, options);
+       chart.render();
 
-var chart = new ApexCharts(document.querySelector("#grade-average-chart"), options);
+       // Click event for the divs
+       document.querySelectorAll('.exam-div').forEach(function (button) {
+           button.addEventListener('click', function () {
+               // Extract data from the clicked div
+               var examData = {
+                   'number': this.getAttribute('data-exam-number'),
+                   'name': this.getAttribute('data-exam-name'),
+                   'physical_percentage': this.getAttribute('data-physical-percentage'),
+                   'basic_config_percentage': this.getAttribute('data-basic-config-percentage'),
+                   'ip_percentage': this.getAttribute('data-ip-percentage'),
+                   'routing_percentage': this.getAttribute('data-routing-percentage'),
+                   'other_percentage': this.getAttribute('data-other-percentage'),
+                   'total_percentage': this.getAttribute('data-total-percentage')
+               };
 
-chart.render();
-    });
+               // Update the chart labels and data with the clicked exam data
+               updateChart(examData);
+           });
+       });
+
+       // Function to update the chart
+       function updateChart(examData) {
+           delete examData['name'];
+           delete examData['number'];
+           delete examData['total_percentage'];
+
+           let labels = Object.keys(examData).map(function (value) {
+               return value.replace('_percentage', '');
+           });
+           let data = Object.values(examData)
+
+           chart.updateSeries([{
+               data: data
+           }]);
+   
+           // Update x-axis categories
+           chart.updateOptions({
+               xaxis: {
+                   categories: labels
+               }
+           });
+       }
+
+   });
+
+
 </script>
