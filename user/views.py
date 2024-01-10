@@ -1,11 +1,11 @@
 import datetime, jwt
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.views import LoginView
 from .forms import CustomLoginForm, CustomUserForm
 from django.contrib.auth import login, authenticate, logout
 from .models import UserCategory, CustomUser
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 from django.http import JsonResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -96,9 +96,62 @@ def VerifyView(request, token):
         messages.error(request, f'An error occurred: {str(e)}')
         # Log the exception for further investigation
         print(f'Error in VerifyView: {str(e)}')
-        return HttpResponseServerError()
 
     return redirect('core:landingPage')
+
+def ResetPasswordView(request):
+    context = {}
+    if request.method == 'POST':
+        pass
+    else:
+        pass
+
+    return render(request, 'core/components/auth/reset.html', context)
+
+def TokenResetPasswordView(request, token):
+    try:
+        payload = jwt.decode(token, 'reset', algorithms=['HS256'])
+        
+        user = get_object_or_404(CustomUser, email=payload.get('id'))
+        user.set_password(payload.get('password'))
+        user.save()
+
+        messages.success(request, 'Password Reset successful! You can now log in.')
+        return redirect('core:landingPage')
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({"message": "Token has expired", "status": "error"}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({"message": "Invalid token", "status": "error"}, status=400)
+    except CustomUser.DoesNotExist:
+        return JsonResponse({"message": "User not found", "status": "error"}, status=404)
+    except Exception as e:
+        return HttpResponseServerError({"message": "Internal server error", "status": "error"})
+
+def SendResetPasswordView(request):
+    userEmail = request.POST.get('email')
+    userNewPassword = request.POST.get('newPassword')
+    print(userNewPassword)
+
+    try:
+        user = CustomUser.objects.get(email=userEmail)
+    except CustomUser.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'})
+
+    payload = {
+        'id': user.email,
+        'password': userNewPassword,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5),
+        'iat': datetime.datetime.utcnow()
+    }
+
+    token = jwt.encode(payload, 'reset', algorithm='HS256')
+
+    try:
+        sendResetPasswordMail(token, user.email)
+        return JsonResponse({'status': 'success', 'message': 'Reset password email sent successfully'})
+    except Exception as e:
+        # Handle email sending failure gracefully
+        return JsonResponse({'status': 'error', 'message': f'Failed to send reset password email: {str(e)}'})
 
 def UpdateProfileView(request):
     if request.method == "POST":
@@ -149,3 +202,30 @@ def sendVerificationMail(token, email):
         fail_silently=False,
     )
 
+def sendResetPasswordMail (token, email):
+    user = CustomUser.objects.get(email=email)
+    subject = "Password Reset Verification: Confirm Changes to Your PacketKnows Account"
+    reset_link = f"{settings.SITE_DOMAIN}/user/reset/{token}/"
+    full_name = f"{user.first_name} {user.last_name}"
+    message = (
+        f"Dear {full_name},\n\n"
+        "We trust this message finds you well. It has been noted that you recently initiated a password reset for your "
+        "PacketKnows account.\n\n"
+        "The good news is that your new password has already been successfully set. This email serves as a verification "
+        "step to confirm that the user making changes to the account is indeed you.\n\n"
+        "To confirm the recent changes and verify your account ownership, kindly click on the following link:\n\n"
+        f"{reset_link}\n\n"
+        "This link is secure and will take you to a confirmation page.\n\n"
+        "Thank you for choosing PacketKnows. We appreciate your trust and look forward to supporting you in your educational "
+        "endeavors.\n\n"
+        "Best regards,\n"
+        "The PacketKnows Team"
+    )
+
+    send_mail(
+        subject,
+        message,
+        settings.EMAIL_HOST_USER,
+        [email],
+        fail_silently=False,
+    )

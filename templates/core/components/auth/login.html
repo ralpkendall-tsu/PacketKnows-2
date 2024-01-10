@@ -25,7 +25,7 @@
                             </div>
 
                             <div class="text-end mb-5">
-                                <a class="text-decoration-none text-dark" href="#">Forgot Password?</a>
+                                <a class="text-decoration-none text-dark" href="{% url 'user:resetPassword' %}">Forgot Password?</a>
                             </div>
                             <div class="text-red">{{ loginForm.non_field_errors }}</div>
                             <button class="btn btn-danger w-100" type="submit">Login</button>

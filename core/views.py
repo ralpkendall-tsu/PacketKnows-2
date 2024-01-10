@@ -22,6 +22,8 @@ def LandingPageView(request):
 
     return render(request, 'core/landing-page.html', context)
 
+
+
 @login_required(login_url='/')
 def DashboardView(request):
     context = {}
