@@ -1,0 +1,52 @@
+{% load static %}
+
+<div class="container">
+    <div class="row ms-2 mt-2 mb-4 ">
+        <h3 class="">My Classes</h3>
+    </div>
+    <div class="d-flex justify-content-between ms-2 me-5 mb-4">
+        <div class="d-flex fs-6 button-container">
+            <button id="activeBtnInstructor" class="btn" hx-trigger="click" hx-get="{% url 'classroom:instructorClasses' status='active' %}" hx-target="#classes-panel">Active</button>
+            <button id="archivedBtnInstructor" class="btn" hx-trigger="click" hx-get="{% url 'classroom:instructorClasses' status='archived' %}" hx-target="#classes-panel">Archived</button>
+            <button id="allBtnInstructor" class="btn" hx-trigger="click" hx-get="{% url 'classroom:instructorClasses' status='all' %}" hx-target="#classes-panel">All</button>
+        </div>
+        <form id="createClass" class="d-flex justify-content-end" hx-post="{% url 'classroom:createClass'%}" hx-swap="none">
+            {% csrf_token %}
+            <div class="d-flex gap-2 w-75">
+                <input name="section" type="text" class="form-control" id="sectionInstructor" aria-describedby="classCodeRegister" placeholder="Section">
+                <input name="year" type="text" class="form-control" id="yearInstructor" aria-describedby="classCodeRegister" placeholder="Year">
+                <select name="courseID" class="form-select" id="classSelectDashboard" aria-label="Select Now" hx-target="#topPerformingStudents" hx-get="{% url 'classroom:topStudents' %}" hx-trigger="change">
+                    {% for course in courses %}
+                    <option value="{{course.id}}" selected>{{course.name}}</option>
+                    {% endfor %}
+                    <option value="" selected>Select a course</option>
+                </select>
+                <button  type="submit" class="btn btn-success w-75">Create Class</button>
+            
+            </div>
+        </form>
+    </div>
+    <div id="classes-panel" style="background-color: rgba(18, 18, 18, 0.06);" class="classes-panel rounded mt-5 p-5">
+    
+    </div>
+
+</div>
+
+
+
+<script>
+    createClassForm = document.querySelector("#createClass")
+
+    document.body.addEventListener('htmx:afterRequest', function (event) {
+        if (event.detail.elt === createClassForm) {
+            var response = JSON.parse(event.detail.xhr.response);
+
+            alert(response.message)
+            window.location.reload();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('activeBtnInstructor').click();
+    });
+</script>

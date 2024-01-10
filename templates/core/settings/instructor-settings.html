@@ -1,0 +1,76 @@
+{% load static %}
+
+<div class="container">
+    <div class="row ms-2 mt-2 mb-5 ">
+        <h3 class="">Profile</h3>
+    </div>
+    <div class="mx-5 px-3">
+        <h5 class="mb-4">Update Profile</h5>
+
+        <form hx-boost="true" hx-post="{% url 'user:updateProfile'%}" hx-swap="none" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="d-flex justify-content-center input-group">
+                <input type="file" name="icon" id="profilePictureInput" accept="image/*" style="display: none;" onchange="displaySelectedImage()">
+                    <label class="profileContainer" for="profilePictureInput">
+                        <img class="profile-icon" id="profilePicture" src="{{request.user.icon.url }}" alt="Profile Picture" class="img-fluid">
+                        <div class="changeImageText">
+                            <p class="fw-bold text-white">Change Picture</p>
+                        </div>
+                    </label>
+            </div>
+        
+            <div class="row mb-4">
+                <div class="col-md-6 d-flex flex-column">
+                    <label class="mb-2" for="">First Name</label>
+                    <input class="form-control" name="firstName" type="text" placeholder="Juan" value="{{request.user.first_name}}">
+                </div>
+                <div class="col-md-6 d-flex flex-column">
+                    <label class="mb-2" for="">Last Name</label>
+                    <input class="form-control" name="lastName" type="text" placeholder="Dela Cruz" value="{{request.user.last_name}}">
+                </div>
+            </div>
+            <div class="row my-4">
+                <div class="col-md-6 d-flex flex-column">
+                    <label class="mb-2" for="">Email</label>
+                <input class="form-control" type="text" placeholder="juandelacruz69@gmail.com" value="{{request.user.email}}" disabled>
+                </div>
+                
+            </div>
+            
+            <div class="col-md-2 mt-4">  
+                <button class="btn btn-success w-100" type="submit">Save</button>
+            </div>
+
+        </form>
+    </div>
+    
+</div>
+
+<script>
+    document.addEventListener('htmx:afterRequest', function(evt) {
+        try {
+            console.log(evt)
+            const response = JSON.parse(evt.detail.xhr.response);
+            alert(response.message);
+        } catch (error) {
+            console.error('Error parsing JSON response:', error);
+        }
+    });
+
+    function displaySelectedImage() {
+        const input = document.getElementById('profilePictureInput');
+        const image = document.getElementById('profilePicture');
+        
+        const formData = new FormData();
+        const file = input.files[0];
+        formData.append('profilePicture', file);
+
+        // Update the image source to show the selected image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            image.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+</script>

@@ -66,6 +66,26 @@ def compute_student_rank(student, classroom):
 
     
     return user_rank
+
+def computeClassRanks(classroom):
+    # Only for TESTING MODE
+    enrollments = Enrollment.objects.filter(classroom=classroom)
+    studentFinalGrades = []
+    for enrollment in enrollments:
+        student = enrollment.student
+        testingReport = computeTestingProgressReport(student=student,classroom=classroom)
+        studentFinalGrade = round(testingReport["total_testing_percentage"], 2)
+        studentGrade = {
+            "id": student.id,
+            "name": student.first_name + " " + student.last_name,
+            "finalGrade": studentFinalGrade
+        }
+        studentFinalGrades.append(studentGrade)
+        
+    sorted_student_final_grades = sorted(studentFinalGrades, key=lambda x: x['finalGrade'], reverse=True)
+
+    
+    return sorted_student_final_grades
         
     
     

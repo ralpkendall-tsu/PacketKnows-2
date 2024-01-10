@@ -1,9 +1,12 @@
 from django.db import models
 from user import models as userModels
 from activity import models as activityModels
+from classroom import models as classroomModels
 
 # Create your models here.
 class TestReactivation(models.Model):
+    student = models.ForeignKey(userModels.CustomUser, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(classroomModels.Classroom, on_delete=models.CASCADE)
     activity = models.ForeignKey(activityModels.Activity, on_delete=models.CASCADE)
     message = models.TextField()
     

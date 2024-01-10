@@ -63,4 +63,14 @@ def TestReactivationView(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
         
-        
+def ReactivateTestView(request, testReactivationID):
+    if request.method == 'POST':
+        try:
+            testReactivation = TestReactivation.objects.get(id=testReactivationID)
+            # reactivate the exam
+            # delete the test reactivation record(testReactivation)
+            print (testReactivation.message)
+            
+            return JsonResponse({"message": "Test reactivated successfully"}, status=200)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)

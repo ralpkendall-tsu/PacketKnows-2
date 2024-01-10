@@ -147,3 +147,5 @@ DOMAIN = 'http://127.0.0.1:80/'
 DOMAIN_MEDIA = 'http://127.0.0.1:80/media/'
 
 SIMULATION_DOMAIN = 'http://3.27.228.226:3080/'
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.100.46']

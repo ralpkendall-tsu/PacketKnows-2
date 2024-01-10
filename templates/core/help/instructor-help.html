@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="row ms-2 mt-2 mb-5 ">
+        <h3 class="">Help</h3>
+    </div>
+
+    <div class="row ms-5 ">
+        <h4>Reactivate Test</h4>
+    </div>
+    <div>
+        <div class="row text-center my-3">
+            <div class="col-md-3 fw-bold">
+                Student Name
+            </div>
+            <div class="col-md-3 fw-bold">
+                Class Name
+            </div>
+            <div class="col-md-1 fw-bold">
+                Activity
+            </div>
+            <div class="col-md-3 fw-bold">
+                Message
+            </div>
+            <div class="col-md-2 fw-bold">
+                Options
+            </div>
+        </div>
+        {% for testReactivation in testReactivations%}
+        <div class="row text-center mb-2">
+            <div class="col-md-3">
+                {{testReactivation.student.first_name}} {{testReactivation.student.last_name}}
+            </div>
+            <div class="col-md-3">
+                {{testReactivation.classroom.name}}
+            </div>
+            <div class="col-md-1">
+                {{testReactivation.activity.base_activity.number}}
+            </div>
+            <div class="col-md-3">
+                {{testReactivation.message}}
+            </div>
+            <div class="col-md-2">
+                <div>
+                    <button class="btn btn-danger" hx-post="{% url 'help:reactivateExam' testReactivationID=testReactivation.id%}" hx-swap="none">Reactivate</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<script>
+
+    document.body.addEventListener('htmx:afterRequest', function (event) {
+            var response = JSON.parse(event.detail.xhr.response);
+
+            alert(response.message)
+            window.location.reload();
+    });
+</script>

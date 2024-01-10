@@ -51,14 +51,18 @@ def UpdateProfileView(request):
         lastName = request.POST.get('lastName')
         icon = request.FILES.get('icon') 
         print(icon)
-        if firstName and lastName and icon:
+        print(firstName)
+        print(lastName)
+        if firstName and lastName:
             user = CustomUser.objects.get(email=request.user.email)
             print(user.icon)
             user.first_name = firstName
             user.last_name = lastName
-            file_name = default_storage.save(icon.name, ContentFile(icon.read()))
-            user.icon = file_name 
             user.save()
+            if icon:
+                file_name = default_storage.save(icon.name, ContentFile(icon.read()))
+                user.icon = file_name 
+                user.save()
 
             return JsonResponse({'success': True, 'message': 'Profile updated successfully!'})
         else:

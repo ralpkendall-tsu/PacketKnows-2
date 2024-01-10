@@ -11,15 +11,15 @@ class Classroom(models.Model):
     description = models.CharField(max_length=255)
     icon = models.ImageField(upload_to='classroom/class-icons/', blank=True, null=True)
     section = models.CharField(max_length=50)
-    semester = models.CharField(max_length=50)
     school_year = models.CharField(max_length=50)
     instructor = models.ForeignKey(userModels.CustomUser, on_delete=models.CASCADE, related_name='instructor_classrooms')
     students = models.ManyToManyField(userModels.CustomUser, through='Enrollment', related_name='enrolled_classrooms')
     course = models.ForeignKey(activityModels.Course, on_delete=models.CASCADE)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
     
     class Meta:
+        ordering = ['-date_updated']
         verbose_name_plural = "Classrooms"
         
     def __str__(self):
