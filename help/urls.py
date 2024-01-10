@@ -7,5 +7,6 @@ urlpatterns = [
     path('change-password/', HelpViews.ChangePassword, name="changePassword"),
     path('update-student-number/', HelpViews.UpdateStudentNumber, name="updateStudentNumber"),
     path('test-reactivation/', HelpViews.TestReactivationView, name="testReactivation"),
-    path('reactivate-exam/<int:testReactivationID>', HelpViews.ReactivateTestView, name="reactivateExam")
+    path('reactivate-exam/<int:testReactivationID>', HelpViews.ReactivateTestView, name="reactivateExam"),
+    path('clear-all-notifications/', HelpViews.ClearAllNotificationsView, name="clearAllNotifications")
 ]

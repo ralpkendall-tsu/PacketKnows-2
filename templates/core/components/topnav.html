@@ -4,23 +4,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       {{user.first_name}} {{user.last_name}}
-                      {{user.id}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                       <li><a class="dropdown-item" href="{% url 'core:settings' %}">Settings</a></li>
                       <li><a class="dropdown-item" href="{% url 'core:help' %}">Help</a></li>
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="{% url 'user:logout' %}">Logout</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown ">
-                    <a class="nav-link dropdown-toggle " href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-bell fa-lg" style="color: #121212;"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
-                      <li><a class="dropdown-item" href="#">Clear All</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#"></a></li>
                     </ul>
                 </li>
             </ul>

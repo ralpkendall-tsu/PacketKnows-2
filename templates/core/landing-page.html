@@ -53,6 +53,16 @@
             </div>
         </div>
     </nav>
+
+    {% if messages %}
+    <div class="alert alert-success text-center">
+        <ul>
+            {% for message in messages %}
+                <li class="fs-4">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     
 
     {% comment %} Hero Section {% endcomment %}

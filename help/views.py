@@ -1,7 +1,8 @@
 from django.http import HttpResponse, HttpResponseServerError, JsonResponse
 from django.shortcuts import render
+from classroom.models import Classroom
 from user.models import CustomUser
-from .models import StudentIDChange, TestReactivation
+from .models import StudentIDChange, TestReactivation, Notification
 from activity.models import Activity
 
 # Create your views here.
@@ -52,16 +53,19 @@ def TestReactivationView(request):
     if request.method == 'POST':
         try:
             activityID = request.POST.get("activityID")
+            classID = request.POST.get("classroomID")
             message = request.POST.get("message")
             
             activity = Activity.objects.get(id=activityID)
-            testReactivation = TestReactivation.objects.create(activity=activity, message=message)
+            classroom = Classroom.objects.get(id=classID)
+            testReactivation = TestReactivation.objects.create(student=request.user, classroom=classroom, activity=activity, message=message)
 
             return JsonResponse({"message": "Test reactivation created successfully"}, status=200)
         except Activity.DoesNotExist:
-            return JsonResponse({"error": "Activity does not exist"}, status=400)
+            return JsonResponse({"message": "Activity does not exist"}, status=400)
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            print(str(e))
+            return JsonResponse({"message": str(e)}, status=500)
         
 def ReactivateTestView(request, testReactivationID):
     if request.method == 'POST':
@@ -69,8 +73,19 @@ def ReactivateTestView(request, testReactivationID):
             testReactivation = TestReactivation.objects.get(id=testReactivationID)
             # reactivate the exam
             # delete the test reactivation record(testReactivation)
-            print (testReactivation.message)
             
             return JsonResponse({"message": "Test reactivated successfully"}, status=200)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+        
+def ClearAllNotificationsView(request):
+    if request.method == 'DELETE':
+        try:
+            notifications = Notification.objects.filter(receiver=request.user)
+            notifications.delete()
+            
+            return JsonResponse({"message": "Notifications cleared successfully"}, status=200)
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({"error": str(e)}, status=500)
+        

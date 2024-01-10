@@ -143,9 +143,17 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 LOGIN_REDIRECT_URL = 'core:dashboard'
 LOGOUT_REDIRECT_URL = '/'
 
-DOMAIN = 'http://127.0.0.1:80/'
-DOMAIN_MEDIA = 'http://127.0.0.1:80/media/'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ralpkendall@gmail.com'
+EMAIL_HOST_PASSWORD = 'asixccwshtfjyxvk'
 
-SIMULATION_DOMAIN = 'http://3.27.228.226:3080/'
+SITE_DOMAIN = 'http://127.0.0.1:80'
+SIMULATION_SITE_DOMAIN = 'http://3.27.228.226:3080'
+SIMULATION_AUTH_USERNAME = "admin"
+SIMULATION_AUTH_PASSWORD = "admin"
+
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.100.46']

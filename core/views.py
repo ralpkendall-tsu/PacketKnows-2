@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from classroom.models import Classroom, Enrollment
 from activity.views import computeTrainingProgressReport, computeTestingProgressReport, computeOverallStrengthRating, computeAverageClassProgress, computeSingleActivityScore
 from activity.models import Activity, Course
-from help.models import TestReactivation
+from help.models import TestReactivation, Notification
 from user.models import CustomUser
 
 # Create your views here.
@@ -30,6 +30,9 @@ def DashboardView(request):
     else:
         userCategory = request.user.category.name
         if userCategory == "Student":
+            student = request.user
+            context["notifications"] = Notification.objects.filter(receiver=student)
+            
             enrollments = Enrollment.objects.filter(student=request.user)
             total_active_test_count = 0 
             for enrollment in enrollments:
