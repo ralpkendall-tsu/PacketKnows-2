@@ -1,0 +1,175 @@
+{% load static %}
+
+<div class="container">
+    <div class="row ms-2 mt-2 mb-4 ">
+        <div class="col-md-4 ">
+            <div class="d-flex align-items-center text-center">
+                <a class="mb-1" href="{% url 'core:classes'%}"><i class="fa-solid fa-xl fa-circle-arrow-left" style="color: #761E1E;"></i></a>
+                <h3 class="ms-3">Progress Report</h3>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mt-5">
+                <p class="fw-bold fs-5">Grade Item</p>
+                <p class="fw-bold ">{{classroom.code}}</p>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <p class="fs-5">Exam</p>
+                <p class="fs-5">Percentage</p>
+            </div>
+            {% for exam in grades.training_percentages %}
+            <hr>
+            <button id="exam_{{ exam.id }}" class="btn exam-div d-flex w-100 justify-content-between align-items-center mt-2"
+                 data-exam-number="{{ exam.number }}"
+                 data-exam-name="{{ exam.name }}"
+                 data-physical-percentage="{{ exam.physical_percentage }}"
+                 data-basic-config-percentage="{{ exam.basic_config_percentage }}"
+                 data-ip-percentage="{{ exam.ip_percentage }}"
+                 data-routing-percentage="{{ exam.routing_percentage }}"
+                 data-other-percentage="{{ exam.other_percentage }}"
+                 data-total-percentage="{{ exam.total_percentage }}">
+                <p class="">{{ exam.number }} - {{ exam.name }}</p>
+                <p class="">{{ exam.total_percentage }}%</p>
+            </button>
+            {% endfor %}
+
+            <hr>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <p class="text-success fw-bold">Grade Total Average</p>
+                <p class="text-success fw-bold">{{grades.total_training_percentage}}%</p>
+            </div>
+
+        </div>
+
+        <div class="col-md-7 ms-5">
+            <div class="d-flex mb-5">
+                <a href="{% url 'core:progressReportTraining' classroom.code %}"><button id="trainingBtn" class="btn me-3">Training</button></a>
+                <a href="{% url 'core:progressReportTesting' classroom.code %}"><button id="testingBtn" class="btn">Testing</button></a>
+            </div>
+
+            <div class="fw-bold">
+                Grade Average
+            </div>
+
+            <div class="text-muted">
+                Percentage of Activity
+            </div>
+
+            <div id="dashboard-chart"
+                data-chart-type="bar"
+                data-chart-name="percentage"
+                data-chart-data="{{barChartData}}"
+                data-chart-labels="{{barChartLabels}}"
+            >
+            <!-- JS Chart will be placed here -->
+            </div>
+            <hr>
+
+            <div class="fw-bold fs-5">
+                Strength Rating
+            </div>
+
+            <div class="text-muted">
+                Based on all of the exams taken
+            </div>
+
+            <div class="d-flex align-items-center justify-content-center">
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">{{ grades.top_training_categories.1.average_percentage }}%</p>
+                        <p class=" p-0 m-0">{{grades.top_training_categories.1.name}}</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle2.png' %}" alt="" class="img-fluid">
+                </div>
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">{{grades.top_training_categories.0.average_percentage}}%</p>
+                        <p class=" p-0 m-0">{{grades.top_training_categories.0.name}}</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle.png' %}" alt="" class="img-fluid">
+                </div>
+                <div class="rating rating-1 d-inline-block">
+                    <div class="rating-label text-white">
+                        <p class="fs-4 p-0 m-0">{{grades.top_training_categories.2.average_percentage}}%</p>
+                        <p class=" p-0 m-0">{{grades.top_training_categories.2.name}}</p>
+                    </div>
+                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle3.png' %}" alt="" class="img-fluid">
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+
+<script>
+     document.addEventListener('DOMContentLoaded', function () {
+        var chartDiv = document.getElementById("dashboard-chart");
+    
+        var options = {
+            chart: {
+                type: chartDiv.dataset.chartType
+            },
+            series: [{
+                name: chartDiv.dataset.chartName,
+                data: JSON.parse(chartDiv.dataset.chartData),
+                color: '#761E1E' // Set the color of the bars to red
+            }],
+            xaxis: {
+                categories: JSON.parse(chartDiv.dataset.chartLabels)
+            },
+            yaxis: {
+                max: 100 // Set the maximum value on the y-axis to 100
+            }
+        };
+    
+        var chart = new ApexCharts(chartDiv, options);
+        chart.render();
+
+        // Click event for the divs
+        document.querySelectorAll('.exam-div').forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Extract data from the clicked div
+                var examData = {
+                    'number': this.getAttribute('data-exam-number'),
+                    'name': this.getAttribute('data-exam-name'),
+                    'physical_percentage': this.getAttribute('data-physical-percentage'),
+                    'basic_config_percentage': this.getAttribute('data-basic-config-percentage'),
+                    'ip_percentage': this.getAttribute('data-ip-percentage'),
+                    'routing_percentage': this.getAttribute('data-routing-percentage'),
+                    'other_percentage': this.getAttribute('data-other-percentage'),
+                    'total_percentage': this.getAttribute('data-total-percentage')
+                };
+
+                // Update the chart labels and data with the clicked exam data
+                updateChart(examData);
+            });
+        });
+
+        // Function to update the chart
+        function updateChart(examData) {
+            delete examData['name'];
+            delete examData['number'];
+            delete examData['total_percentage'];
+
+            let labels = Object.keys(examData).map(function (value) {
+                return value.replace('_percentage', '');
+            });
+            let data = Object.values(examData)
+
+            chart.updateSeries([{
+                data: data
+            }]);
+    
+            // Update x-axis categories
+            chart.updateOptions({
+                xaxis: {
+                    categories: labels
+                }
+            });
+        }
+
+    });
+
+
+</script>

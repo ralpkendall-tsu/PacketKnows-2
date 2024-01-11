@@ -23,6 +23,11 @@ def completedClasses(request):
     classrooms = [enrollment.classroom for enrollment in enrollments]
     return render(request, 'core/classes/student-classes-partial.html', {'classes': classrooms})
 
+def allClasses(request):
+    enrollments = Enrollment.objects.filter(student=request.user)
+    classrooms = [enrollment.classroom for enrollment in enrollments]
+    return render(request, 'core/classes/selfLearner-classes-partial.html', {'classes': classrooms})
+
 def Classes(request):
     if request.method == 'POST':
         classCode = request.POST.get('classCode')

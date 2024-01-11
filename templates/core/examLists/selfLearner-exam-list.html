@@ -1,0 +1,28 @@
+{% load static %}
+
+<div class="container">
+    <div class="row ms-2 mt-2 mb-4 ">
+        <div class="col">
+            <div class="d-flex align-items-center text-center">
+                <a class="mb-1" href="{% url 'core:classes'%}"><i class="fa-solid fa-xl fa-circle-arrow-left" style="color: #761E1E;"></i></a>
+                {% if mode == 'training'%}
+                <h3 class="ms-5">Training Mode Activities</h3>
+                {% else %}
+                <h3 class="ms-5">Testing Mode Activities</h3>
+                {% endif%}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center fw-bold my-5">
+        Activities
+    </div>
+
+    {%for activity in activities%}
+    <div class="container mx-5 px-5 mb-3">
+        <a class="fw-bold text-black text-decoration-none" href="{% url 'core:activity' id=activity.id mode=mode%}"><i class="fa-regular fa-clipboard fa-lg me-3" style="color: #761E1E;"></i>{{activity.base_activity.number}} - {{course.slug}} - {{activity.base_activity.name}}</a>
+        <hr class="me-5">
+    </div>
+    {% endfor %}
+</div>
+

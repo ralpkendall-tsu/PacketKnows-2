@@ -127,8 +127,10 @@ def update_chart_data(request, mode):
 
     data = average_progress['averages']
     labels = average_progress['class_names']
+    
+    average = round(sum(data) / len(data), 2)
 
-    return JsonResponse({'chartData': data, 'chartLabels': labels})
+    return JsonResponse({'chartData': data, 'chartLabels': labels, 'average':average})
         
 
 def computeAverageClassProgress(student, mode):

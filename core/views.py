@@ -53,6 +53,11 @@ def DashboardView(request):
             
             bar_chart_labels = average_progress['class_names']
             bar_chart_data = average_progress['averages']
+            allClassesAverage = round(sum(bar_chart_data) / len(bar_chart_data), 2)
+            
+            context["barChartLabels"] = json.dumps(bar_chart_labels)
+            context["barChartData"] = json.dumps(bar_chart_data)
+            context["allClassesAverage"] = allClassesAverage
             
             context["barChartLabels"] = json.dumps(bar_chart_labels)
             context["barChartData"] = json.dumps(bar_chart_data)
@@ -62,6 +67,7 @@ def DashboardView(request):
             classrooms = [enrollment.classroom for enrollment in enrollments]
             
             context["classrooms"] = classrooms
+            
         elif userCategory == "Instructor":
             classrooms = Classroom.objects.filter(instructor=request.user)
             context["classrooms"] = classrooms
@@ -70,6 +76,72 @@ def DashboardView(request):
             context["allStudentCount"] = enrollments.count()
             
             context["testReactivations"] =  TestReactivation.objects.filter(classroom__instructor=request.user)
+            
+        elif userCategory == "Self Learner":
+            student = request.user
+            context["notifications"] = Notification.objects.filter(receiver=student)
+            
+            enrollments = Enrollment.objects.filter(student=request.user)
+            total_active_test_count = 0 
+            for enrollment in enrollments:
+                activities = enrollment.activities.filter(status="working")
+                total_active_test_count += activities.count()
+            
+            ordered_enrollments = enrollments.order_by('-date_updated')
+            classrooms = [enrollment.classroom for enrollment in ordered_enrollments]
+            
+            context["strengthRating"] = computeOverallStrengthRating(request.user)
+            context["activeTestCount"] = total_active_test_count
+            context["classes"] = classrooms
+            
+            # bar chart
+            average_progress = computeAverageClassProgress(request.user, "training")
+            
+            bar_chart_labels = average_progress['class_names']
+            bar_chart_data = average_progress['averages']
+            allClassesAverage = sum(bar_chart_data) / len(bar_chart_data)
+            
+            context["barChartLabels"] = json.dumps(bar_chart_labels)
+            context["barChartData"] = json.dumps(bar_chart_data)
+            context["allClassesAverage"] = allClassesAverage
+            
+            # feedback selection
+            enrollments = Enrollment.objects.filter(student=request.user)
+            classrooms = [enrollment.classroom for enrollment in enrollments]
+            
+            context["classrooms"] = classrooms
+            
+            # progress
+            classrooms = student.enrolled_classrooms.all()
+            
+            classDatas = []
+            for classroom in classrooms:
+                classData = {}
+                enrollment = Enrollment.objects.get(student=student, classroom=classroom)
+                
+                if enrollment.status == "training":
+                    trainingProgressReport = computeTrainingProgressReport(student, classroom)["total_training_percentage"]
+                    classData["average"] = trainingProgressReport
+                elif enrollment.status == "testing":
+                    testingProgressReport = computeTestingProgressReport(student, classroom)["total_testing_percentage"]
+                    classData["average"] = testingProgressReport
+                elif enrollment.status == "completed":
+                    trainingProgressReport = computeTrainingProgressReport(student, classroom)["total_training_percentage"]
+                    testingProgressReport = computeTestingProgressReport(student, classroom)["total_testing_percentage"]
+                    completeProgressReport = round((trainingProgressReport + testingProgressReport) / 2, 2)
+                    classData["average"] = completeProgressReport
+                    
+                
+                classData["classroom"] = classroom
+                classData["enrollment"] = enrollment
+                
+                classDatas.append(classData)
+            
+            context["classDatas"] = classDatas
+                
+                
+                
+            
             
 
     return render(request, 'core/dashboard.html', context)
@@ -154,7 +226,23 @@ def ProgressReportTrainingView(request, classSlug):
         elif userCategory == "Instructor":
             pass
         elif userCategory == "Self Learner":
-            pass
+            classroom = Classroom.objects.get(code=classSlug)
+            context["classroom"] = classroom
+            context["grades"] = computeTrainingProgressReport(request.user, classroom)
+            
+            
+            enrollment = get_object_or_404(Enrollment, student=request.user, classroom=classroom)
+            firstActivity = enrollment.activities.get(base_activity__number="1.1", mode="training")
+            firstActivityScore = computeSingleActivityScore(request.user, firstActivity.id)
+            bar_chart_labels = firstActivityScore['labels']
+            bar_chart_data = firstActivityScore['data']
+            
+            context["barChartLabels"] = json.dumps(bar_chart_labels)
+            context["barChartData"] = json.dumps(bar_chart_data)
+            
+            enrollment = get_object_or_404(Enrollment, student=request.user, classroom=classroom)
+            enrollment.date_updated = timezone.now()
+            enrollment.save()
         
         
 
@@ -188,7 +276,24 @@ def ProgressReportTestingView(request, classSlug):
         elif userCategory == "Instructor":
             pass
         elif userCategory == "Self Learner":
-            pass
+            classroom = Classroom.objects.get(code=classSlug)
+            context["classroom"] = classroom
+            context["grades"] = computeTestingProgressReport(request.user, classroom)
+            
+            
+            
+            enrollment = get_object_or_404(Enrollment, student=request.user, classroom=classroom)
+            firstActivity = enrollment.activities.get(base_activity__number="1.1", mode="testing")
+            firstActivityScore = computeSingleActivityScore(request.user, firstActivity.id)
+            bar_chart_labels = firstActivityScore['labels']
+            bar_chart_data = firstActivityScore['data']
+            
+            context["barChartLabels"] = json.dumps(bar_chart_labels)
+            context["barChartData"] = json.dumps(bar_chart_data)
+            
+            enrollment = get_object_or_404(Enrollment, student=request.user, classroom=classroom)
+            enrollment.date_updated = timezone.now()
+            enrollment.save()
         
         
         
@@ -280,7 +385,20 @@ def ExamListView(request, classSlug, mode):
         elif userCategory == "Instructor":
             pass
         elif userCategory == "Self Learner":
-            pass
+            try:
+                classroom = Classroom.objects.get(code=classSlug)
+                enrollment = Enrollment.objects.get(student=request.user, classroom=classroom)
+                activities = enrollment.activities.filter(mode=mode)
+                context["activities"] = activities
+                context["mode"] = mode
+                context["course"] = classroom.course
+                
+                enrollment = get_object_or_404(Enrollment, student=request.user, classroom=classroom)
+                enrollment.date_updated = timezone.now()
+                enrollment.save()
+                
+            except (Classroom.DoesNotExist, Enrollment.DoesNotExist):
+                context["error_message"] = "Classroom or enrollment not found."
         
         
             

@@ -45,11 +45,6 @@
             </div>
             <hr>
             <div class="container d-flex justify-content-between align-items-center mt-4">
-                <p><span class="bg-pink p-1 rounded-circle me-2"><i class="fa-solid fa-key" style="color: #761E1E;"></i></span>Student ID:</p>
-                <p class="">{{user.school_id}}</p>
-            </div>
-            <hr>
-            <div class="container d-flex justify-content-between align-items-center mt-4">
                 <p><span class="bg-pink p-1 rounded-circle me-2"><i class="fa-solid fa-envelope" style="color: #761E1E;"></i></span>Email:</p>
                 <p class="">{{user.email}}</p>
             </div>
@@ -78,78 +73,34 @@
             >
             <!-- JS Chart will be placed here -->
             </div>
-            <p class="text-muted">Average: ToDo</p>
+            <p class="text-muted">Average = <span id="allClassesAverage" class="fw-bold">{{allClassesAverage}}</span> %</p>
         </div>
-    </div>
-    <div class="row me-4 mt-5">
-        <div class="col-md-4">
-            <p class="fs-5 fw-bold mb-0">Strength Rating</p>
-            <p class="text-muted mt-2">Based on all of the exams taken</p>
 
-            <div>
-                <div class="rating rating-1 d-inline-block">
-                    <div class="rating-label text-white">
-                        <p class="fs-4 p-0 m-0">{{strengthRating.1.average_percentage}}%</p>
-                        <p class=" p-0 m-0">{{strengthRating.1.name}}</p>
-                    </div>
-                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle3.png' %}" alt="" class="img-fluid">
-                </div>
-                <div class="rating rating-1 d-inline-block">
-                    <div class="rating-label text-white">
-                        <p class="fs-4 p-0 m-0">{{strengthRating.0.average_percentage}}%</p>
-                        <p class=" p-0 m-0">{{strengthRating.0.name}}</p>
-                    </div>
-                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle.png' %}" alt="" class="img-fluid">
-                </div>
-                <div class="rating rating-1 d-inline-block">
-                    <div class="rating-label text-white">
-                        <p class="fs-4 p-0 m-0">{{strengthRating.2.average_percentage}}%</p>
-                        <p class=" p-0 m-0">{{strengthRating.2.name}}</p>
-                    </div>
-                    <img src="{% static 'res/icons/Dashboard/Dashboard-circle2.png' %}" alt="" class="img-fluid">
-                </div>
-            </div>
-            
+        <div class="container">
+            <hr class="me-4 ">
         </div>
-        <div class="col-md-4">
-            <p class="fs-5 fw-bold mb-5">Recent Classes</p>
-            {% for classroom in classes%}
-            <a href="{% url 'core:classes' %}" class="text-dark unstyled text-decoration-none">
-                <div class="d-flex justify-content-between mt-4">
-                    <p><img src="{{classroom.icon.url}}" alt="" class="logo me-3 rounded-circle">{{classroom.name}}</p>
-                    <p class="text-muted">{{classroom.instructor.first_name.0}}. {{classroom.instructor.last_name}}</p>
-                </div>
-                <hr class="mb-4 mt-0">
-            </a>
-            {% endfor %}
-        </div>
-        <div class="col-md-4">
-            <p class="fs-5 fw-bold mb-3">Feedback</p>
-            <select name="classroomID" class="form-select mb-3" id="classSelectDashboard" aria-label="Select Now" hx-target="#feedback-content" hx-get="{% url 'classroom:classOverAllFeedback' %}" hx-trigger="change">
-                {% for classroom in classrooms %}
-                <option value="{{classroom.id}}" selected>{{classroom.name}}</option>
-                {% endfor %}
-                <option value="" selected>Select a class</option>
-            </select>
-            <div id="feedback-content">
-                <p>Keep acing the Basic Configuration</p>
-                <hr class="my-0">
-                <p>Work more on your Routing then all is well!</p>
-                <hr class="my-0">
-                <p class="fw-bold fs-6 mt-4">Class Rank</p>
-                <div class="d-flex justify-content-center text-dark-red ">
-                    <div class="rating rating-1 d-inline-block ">
-                        <div class="rating-label ">
-                            <p class="fs-3 p-0 m-0 mb-2 fw-bold">1</p>
-                            <p class=" p-0 m-0 fw-regular">Excellent!</p>
+
+        <div class="row">
+            {% for classData in classDatas %}
+            <div class="col-4 mb-2">
+                <p class="mt-2 mb-3 fw-bold">{{classData.classroom.course.slug}}</p>
+                <a class="btn btn-light" href="{% url 'core:progressReportTraining' classData.classroom.code %}">More Details</a>
+                <hr>
+                <p class="fs-5 fw-bold mt-4">Progress</p>
+                <div class="d-flex justify-content-center">
+                    <div class="rating rating-1 d-inline-block">
+                        <div class="rating-label text-white">
+                            <p class="fs-4 p-0 m-0 mb-2 fw-bold">{{classData.average}}%</p>
+                            <p class=" p-0 m-0">{{classData.enrollment.status}}</p>
                         </div>
-                        <img src="{% static 'res/icons/Dashboard/Dashboard-circle4.png' %}" alt="" class="img-fluid">
+                        <img src="{% static 'res/icons/Dashboard/Dashboard-circle.png' %}" alt="" class="img-fluid">
                     </div>
                 </div>
             </div>
-            
+            {% endfor %}
             
         </div>
+
     </div>
 </div>
 
@@ -195,6 +146,9 @@
                         categories: response.chartLabels
                     }
                 });
+
+                let allClassesAverageSpan = document.querySelector("#allClassesAverage")
+                allClassesAverageSpan.innerText= response.average
             }
             
             let clearNotifBtn = document.getElementById("clearNotifBtn");

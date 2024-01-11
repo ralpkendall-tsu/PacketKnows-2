@@ -1,0 +1,27 @@
+{% load static %}
+{% load simulation_tags %}
+
+<div class="container me-2">
+    <div class="row ms-2 mt-2 mb-4 ">
+        <div class="col-md-4 ">
+            <a class="mb-1" href="javascript:history.back()"><i class="fa-solid fa-xl fa-circle-arrow-left" style="color: #761E1E;"></i></a>
+        </div>
+    </div>
+
+    <iframe title="hello" src="{% gns3_project_url activity=activity.projectID %}" width="1200" height="650"></iframe>
+
+    <div class="d-flex justify-content-between bg-dark-red px-3 mt-2" style="width:1200px;">
+        <div>
+            {{activity.base_activity.number}} - {{activity.base_activity.course.slug}} - {{activity.base_activity.name}}
+        </div>
+        <div id="timer-container">
+            <p>Time passed: <span id="timer">0:00</span></p>
+        </div>
+        <div>
+            <button class="btn">Restart</button>
+            <button class="btn">Save</button>
+            <button class="btn">Scores</button>
+            <button class="btn text-success">Submit</button>
+        </div>
+    </div>
+</div>

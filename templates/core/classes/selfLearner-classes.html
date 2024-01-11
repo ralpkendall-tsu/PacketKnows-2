@@ -1,0 +1,36 @@
+{% load static %}
+
+<div class="container">
+    <div class="row ms-2 mt-2 mb-4 ">
+        <h3 class="">My Classes</h3>
+    </div>
+        <div class="d-flex fs-6 button-container ms-2">
+            <button id="activeBtn" class="btn" hx-trigger="click" hx-get="{% url 'classroom:allClasses' %}" hx-target="#classes-panel">All</button>
+        </div>
+    <div id="classes-panel" style="background-color: rgba(18, 18, 18, 0.06);" class="classes-panel rounded mt-5 p-5">
+    
+    </div>
+
+</div>
+
+
+
+<script>
+    document.addEventListener('htmx:afterRequest', function(evt) {
+        try {
+            console.log(evt)
+            const response = JSON.parse(evt.detail.xhr.response);
+            alert(response.message);
+
+            if (evt.detail.xhr.status === 200) {
+                location.reload(true);
+            }
+        } catch (error) {
+            console.error('Error parsing JSON response:', error);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('activeBtn').click();
+    });
+</script>

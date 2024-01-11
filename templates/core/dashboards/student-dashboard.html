@@ -78,7 +78,7 @@
             >
             <!-- JS Chart will be placed here -->
             </div>
-            <p class="text-muted">Average: ToDo</p>
+            <p class="text-muted">Average = <span id="allClassesAverage" class="fw-bold">{{allClassesAverage}}</span> %</p>
         </div>
     </div>
     <div class="row me-4 mt-5">
@@ -195,6 +195,9 @@
                         categories: response.chartLabels
                     }
                 });
+
+                let allClassesAverageSpan = document.querySelector("#allClassesAverage")
+                allClassesAverageSpan.innerText= response.average
             }
             
             let clearNotifBtn = document.getElementById("clearNotifBtn");
