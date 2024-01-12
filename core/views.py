@@ -10,6 +10,7 @@ from activity.views import computeTrainingProgressReport, computeTestingProgress
 from activity.models import Activity, Course
 from help.models import TestReactivation, Notification
 from user.models import CustomUser
+from django.conf import  settings
 
 # Create your views here.
 def LandingPageView(request):
@@ -380,6 +381,8 @@ def ExamListView(request, classSlug, mode):
                 enrollment.date_updated = timezone.now()
                 enrollment.save()
                 
+                
+                
             except (Classroom.DoesNotExist, Enrollment.DoesNotExist):
                 context["error_message"] = "Classroom or enrollment not found."
         elif userCategory == "Instructor":
@@ -418,7 +421,8 @@ def ActivitySimulationView(request, id, mode):
             pass
         elif userCategory == "Self Learner":
             pass
-        
-        
-            
-    return render(request, 'core/activity.html', context)
+
+    response = render(request, 'core/activity.html', context)
+    response['X-Frame-Options'] = 'ALLOWALL'
+
+    return response

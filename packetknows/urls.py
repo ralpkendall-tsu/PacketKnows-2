@@ -26,6 +26,7 @@ urlpatterns = [
     path('activity/', include('activity.urls')),
     path('classroom/', include('classroom.urls')),
     path('help/', include('help.urls')),
+    path('simulation/', include('simulation.urls')),
 ]
 
 if settings.DEBUG:

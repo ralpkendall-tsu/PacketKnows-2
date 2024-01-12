@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from .models import Activity
 from classroom.models import Enrollment, Classroom 
@@ -46,6 +46,18 @@ def ActivityOptions(request):
         context["activities"] = activities
         
         return render(request, 'core/help/student-help-activity-partial.html', context)
+    
+def serve_pdf(request, pdf_path):
+    # Assuming pdf_path is the path to your PDF file in the media directory
+    pdf_path = pdf_path.lstrip('/')
+    pdf_file = open(pdf_path, 'rb')
+    response = FileResponse(pdf_file)
+    response['Content-Type'] = 'application/pdf'
+    response['Content-Disposition'] = 'inline; filename="your_file.pdf"'
+    response['X-Frame-Options'] = 'ALLOWALL'
+    return response
+    
+    
     
 def compute_student_rank(student, classroom):
     enrollments = Enrollment.objects.filter(classroom=classroom)

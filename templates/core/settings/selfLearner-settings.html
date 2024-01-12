@@ -10,6 +10,7 @@
         <form hx-boost="true" hx-post="{% url 'user:updateProfile'%}" hx-swap="none" enctype="multipart/form-data">
             {% csrf_token %}
 
+            {% if request.user.icon %}
             <div class="d-flex justify-content-center input-group">
                 <input type="file" name="icon" id="profilePictureInput" accept="image/*" style="display: none;" onchange="displaySelectedImage()">
                     <label class="profileContainer" for="profilePictureInput">
@@ -19,6 +20,17 @@
                         </div>
                     </label>
             </div>
+            {% else %}
+            <div class="d-flex justify-content-center input-group">
+                <input type="file" name="icon" id="profilePictureInput" accept="image/*" style="display: none;" onchange="displaySelectedImage()">
+                    <label class="profileContainer" for="profilePictureInput">
+                        <img class="profile-icon" id="profilePicture" src="#" alt="Add Profile Picture" class="img-fluid">
+                        <div class="changeImageText">
+                            <p class="fw-bold text-white">Change Picture</p>
+                        </div>
+                    </label>
+            </div>
+            {% endif %}
         
             <div class="row mb-4">
                 <div class="col-md-6 d-flex flex-column">

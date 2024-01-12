@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'activity.apps.ActivityConfig',
     'classroom.apps.ClassroomConfig',
     'help.apps.HelpConfig',
+    'simulation.apps.SimulationConfig',
     'bootstrap5',
 ]
 
@@ -157,3 +158,5 @@ SIMULATION_AUTH_PASSWORD = "admin"
 
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.100.46']
+
+X_FRAME_OPTIONS = 'ALLOWALL'
