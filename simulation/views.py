@@ -1,4 +1,9 @@
 from django.shortcuts import render
+import requests
+from requests.auth import HTTPBasicAuth
+from django.conf import settings
+from django.http import JsonResponse
+
 
 # Create your views here.
 def RestartActivityView(request):

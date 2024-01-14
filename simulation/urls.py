@@ -6,4 +6,5 @@ urlpatterns = [
     path('save-activity/', simulationViews.SaveActivityView, name='saveActivity'),
     path('scores/', simulationViews.ScoresView, name='scores'),
     path('submit-activity/', simulationViews.SubmitActivityView, name='submitActivity'),
+
 ]
