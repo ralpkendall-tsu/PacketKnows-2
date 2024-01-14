@@ -12,7 +12,7 @@ class Classroom(models.Model):
     icon = models.ImageField(upload_to='classroom/class-icons/', blank=True, null=True)
     section = models.CharField(max_length=50)
     school_year = models.CharField(max_length=50)
-    instructor = models.ForeignKey(userModels.CustomUser, on_delete=models.CASCADE, related_name='instructor_classrooms')
+    instructor = models.ForeignKey(userModels.CustomUser, on_delete=models.CASCADE, related_name='instructor_classrooms', blank=True, null=True)
     students = models.ManyToManyField(userModels.CustomUser, through='Enrollment', related_name='enrolled_classrooms')
     course = models.ForeignKey(activityModels.Course, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)

@@ -41,23 +41,23 @@ class BaseActivity(models.Model):
         verbose_name_plural = "Base Activities"
         
     def __str__(self):
-        return f"{self.course.slug} - {self.number}"
+        return f"{self.course.slug} - {self.number} - {self.name}"
     
 class Activity(models.Model):
     base_activity = models.ForeignKey(BaseActivity, on_delete=models.CASCADE)
     projectID = models.CharField(max_length=255, unique=True)
     mode = models.CharField(max_length=50)
-    physical_points = models.PositiveIntegerField()
-    basic_config_points = models.PositiveIntegerField()
-    ip_points = models.PositiveIntegerField()
-    routing_points = models.PositiveIntegerField()
-    other_points = models.PositiveIntegerField()
-    time_spent = models.PositiveIntegerField()
+    physical_points = models.PositiveIntegerField(default=0)
+    basic_config_points = models.PositiveIntegerField(default=0)
+    ip_points = models.PositiveIntegerField(default=0)
+    routing_points = models.PositiveIntegerField(default=0)
+    other_points = models.PositiveIntegerField(default=0)
+    time_spent = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=50, default="open")
     
     class Meta:
         verbose_name_plural = "Activities"
         
     def __str__(self):
-        return f"{self.base_activity.course.slug} - {self.base_activity.number}"
+        return f"{self.id} - {self.base_activity.course.slug} - {self.base_activity.number} - {self.base_activity.name}"
     

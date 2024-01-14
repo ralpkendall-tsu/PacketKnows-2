@@ -19,7 +19,7 @@ admin.site.register(ActivityCategory, ActivityCategoryAdmin)
 
 
 class BaseActivityAdmin(admin.ModelAdmin):
-    list_display = ('number', 'category', 'course', 'time_limit')
+    list_display = ('number', 'course', 'name', 'time_limit')
     search_fields = ('number', 'category__name', 'course__name')
     list_filter = ('category', 'course')
 
