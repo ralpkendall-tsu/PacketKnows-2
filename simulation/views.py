@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 import requests
 from requests.auth import HTTPBasicAuth
@@ -69,8 +70,36 @@ def SaveActivityView(request , activityID):
 
     return JsonResponse({"message":"successd"}, status=200)
 
-def ScoresView(request):
-    pass
+def ScoresView(request, userID, activityID):
+    course = None
+    student_activity = None
+
+    if CustomUser.objects.filter(id=userID).exists():
+        student = CustomUser.objects.get(id=userID)
+        activity = Activity(id=activityID)
+
+        course = activity.course
+    
+
+    projectID = activity.projectID
+    nodes = getAllNodes(projectID)
+    allConfigs = getAllNodeConfigs(projectID, nodes)
+    allConfigs["links"] = IntermediaryUtils.getAllLinks(projectID, nodes)
+
+    correctConfigString = activity.base_activity.answer_key
+    correctConfig = json.loads(correctConfigString)
+    correctConfig = json.loads(correctConfig)
+
+    points = activity1.getPoints(allConfigs, correctConfig)
+
+    print(allConfigs)
+    print('|')
+    print('|')
+    print('|')
+    print(correctConfig)
+
+    # return Response(allConfigs)
+    return JsonResponse(points)
 
 def SubmitActivityView(request):
     pass
