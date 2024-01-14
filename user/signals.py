@@ -11,7 +11,6 @@ from activity.models import Activity, BaseActivity
 @receiver(post_save, sender=CustomUser)
 def auto_enroll_self_learner(sender, instance, created, **kwargs):
     if created and instance.category.name == "Self Learner":
-        print("Signal for Self Learner working!")
         # Get the three classes you want to enroll the self-learner in
         classITN = Classroom.objects.get(code="ITN", instructor__isnull=True)
         classSRWE = Classroom.objects.get(code="SRWE", instructor__isnull=True)
@@ -30,12 +29,33 @@ def auto_enroll_self_learner(sender, instance, created, **kwargs):
         # Create Activity instances for each class
         activities_to_save = []
 
-        activities_to_save += createSelfLearnerActivity(instance, enrollmentITN, "training")
-        activities_to_save += createSelfLearnerActivity(instance, enrollmentITN, "testing")
-        activities_to_save += createSelfLearnerActivity(instance, enrollmentSRWE, "training")
-        activities_to_save += createSelfLearnerActivity(instance, enrollmentSRWE, "testing")
-        activities_to_save += createSelfLearnerActivity(instance, enrollmentENSA, "training")
-        activities_to_save += createSelfLearnerActivity(instance, enrollmentITN, "testing")
+        ITNactivities = []
+        activities_to_saveITNTraining = createSelfLearnerActivity(instance, enrollmentITN, "training")
+        activities_to_save += activities_to_saveITNTraining
+        ITNactivities += activities_to_saveITNTraining
+        activities_to_saveITNTesting = createSelfLearnerActivity(instance, enrollmentITN, "testing")
+        activities_to_save += activities_to_saveITNTesting
+        ITNactivities += activities_to_saveITNTesting
+        enrollmentITN.activities.set(ITNactivities)
+
+        SRWE_activities = []
+        activities_to_saveSRWETraining = createSelfLearnerActivity(instance, enrollmentSRWE, "training")
+        activities_to_save += activities_to_saveSRWETraining
+        SRWE_activities += activities_to_saveSRWETraining
+        activities_to_saveSRWETesting = createSelfLearnerActivity(instance, enrollmentSRWE, "testing")
+        activities_to_save += activities_to_saveSRWETesting
+        SRWE_activities += activities_to_saveSRWETesting
+        enrollmentSRWE.activities.set(SRWE_activities)
+
+        # ENSA activities
+        ENSA_activities = []
+        activities_to_saveENSATraining = createSelfLearnerActivity(instance, enrollmentENSA, "training")
+        activities_to_save += activities_to_saveENSATraining
+        ENSA_activities += activities_to_saveENSATraining
+        activities_to_saveENSATesting = createSelfLearnerActivity(instance, enrollmentENSA, "testing")
+        activities_to_save += activities_to_saveENSATesting
+        ENSA_activities += activities_to_saveENSATesting
+        enrollmentENSA.activities.set(ENSA_activities)
 
         Activity.objects.bulk_create(activities_to_save)
         
