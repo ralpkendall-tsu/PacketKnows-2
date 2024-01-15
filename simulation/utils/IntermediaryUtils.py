@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from rest_framework.response import Response
 import requests
 from requests.auth import HTTPBasicAuth
 from ciscoconfparse import CiscoConfParse
@@ -10,7 +9,7 @@ from .. import views
 
 
 def getConfigDeviceType(projectID, node):
-    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "/v2/projects/" + projectID + "/nodes/" + node["id"],
+    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "v2/projects/" + projectID + "/nodes/" + node["id"],
             auth=HTTPBasicAuth(settings.SIMULATION_AUTH_USERNAME, settings.SIMULATION_AUTH_PASSWORD))
     data = response.json()
     deviceType = data.get("node_type")
@@ -468,7 +467,7 @@ def getConfigVlan(parse):
 
 
 def getAllLinks(projectID, nodes):
-    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "/v2/projects/" + projectID + "/links",
+    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "v2/projects/" + projectID + "/links",
         auth=HTTPBasicAuth(settings.SIMULATION_AUTH_USERNAME, settings.SIMULATION_AUTH_PASSWORD))
     
     data = response.json()

@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from rest_framework.response import Response
 import requests
 from requests.auth import HTTPBasicAuth
 from ciscoconfparse import CiscoConfParse

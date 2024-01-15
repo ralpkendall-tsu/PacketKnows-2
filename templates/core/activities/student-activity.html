@@ -33,8 +33,8 @@
         </div>
         <div>
             <button class="btn text-white" hx-post="{% url 'simulation:reduplicateActivity' activityID=activity.id enrollmentID=enrollmentID %}" hx-swap="none">Restart</button>
-            <button class="btn text-white">Save</button>
-            <button class="btn text-white">Scores</button>
+            <button class="btn text-white" >Save</button>
+            <button class="btn text-white" hx-post="{% url 'simulation:scores' activityID=activity.id %}" hx-swap="none">Scores</button>
             <button class="btn text-success fw-bold">Submit</button>
         </div>
     </form>

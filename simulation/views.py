@@ -8,6 +8,9 @@ from classroom.models import Enrollment
 from user.models import CustomUser
 from activity.models import Activity
 from django.http import HttpRequest
+from .utils import IntermediaryUtils, pcUtils
+from . import scoring
+from ciscoconfparse import CiscoConfParse
 
 
 # Create your views here.
@@ -61,22 +64,26 @@ def SaveActivityView(request , activityID):
     return JsonResponse({"message":"successd"}, status=200)
 
 def ScoresView(request,activityID):
-    activity = Activity(id=activityID)
+    activity = Activity.objects.get(id=activityID)
 
+    print(1)
     projectID = activity.projectID
     nodes = getAllNodes(projectID)
+    print(2)
     allConfigs = getAllNodeConfigs(projectID, nodes)
+    print(3)
     allConfigs["links"] = IntermediaryUtils.getAllLinks(projectID, nodes)
+    print(4)
 
     correctConfigString = activity.base_activity.answer_key
     correctConfig = json.loads(correctConfigString)
     correctConfig = json.loads(correctConfig)
 
-    points = activity1.getPoints(allConfigs, correctConfig)
+    points = scoring.getPoints(allConfigs, correctConfig)
 
-    print(allConfigs)
-    print(correctConfig)
-    print("")
+    # print(allConfigs)
+    # print(correctConfig)
+    # print("")
     print(points)
 
     return JsonResponse(points)
@@ -88,10 +95,10 @@ def SubmitActivityView(request):
 
 
 def getAllNodes(projectID):
-    responseToOpen = requests.post(settings.SIMULATION_SITE_DOMAIN + "/v2/projects/" + projectID + "/open",
+    responseToOpen = requests.post(settings.SIMULATION_SITE_DOMAIN + "v2/projects/" + projectID + "/open",
         auth=HTTPBasicAuth(settings.SIMULATION_AUTH_USERNAME, settings.SIMULATION_AUTH_PASSWORD))
 
-    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "/v2/projects/" + projectID + "/nodes",
+    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "v2/projects/" + projectID + "/nodes",
         auth=HTTPBasicAuth(settings.SIMULATION_AUTH_USERNAME, settings.SIMULATION_AUTH_PASSWORD))
     
     data = response.json()
@@ -140,13 +147,13 @@ def getAllNodeConfigs(projectID, nodes):
     return allNodeConfigs
 
 def getPCConfigToJSONObject(projectID, node):
-    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "/v2/projects/" + projectID + "/nodes/" + node["id"]+ "/files/startup.vpc",
+    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "v2/projects/" + projectID + "/nodes/" + node["id"]+ "/files/startup.vpc",
             auth=HTTPBasicAuth(settings.SIMULATION_AUTH_USERNAME, settings.SIMULATION_AUTH_PASSWORD))
 
     return pcUtils.getConfigIP(response.text)
 
 def getSwitchParse(projectID, node):
-    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "/v2/projects/" + projectID + "/nodes/" + node["id"] +"/files/startup-config.cfg",
+    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "v2/projects/" + projectID + "/nodes/" + node["id"] +"/files/startup-config.cfg",
             auth=HTTPBasicAuth(settings.SIMULATION_AUTH_USERNAME, settings.SIMULATION_AUTH_PASSWORD))
     
     parse = CiscoConfParse(response.text.splitlines())
@@ -208,7 +215,7 @@ def getSwitchConfigToJSONObject(projectID, node):
     return jsonConfig
 
 def getRouterParse(projectID, node, routerCounter):
-    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "/v2/projects/" + projectID + "/nodes/" + node["id"] +"/files/configs/i"+ str(routerCounter) +"_startup-config.cfg",
+    response = requests.get(settings.SIMULATION_SITE_DOMAIN + "v2/projects/" + projectID + "/nodes/" + node["id"] +"/files/configs/i"+ str(routerCounter) +"_startup-config.cfg",
             auth=HTTPBasicAuth(settings.SIMULATION_AUTH_USERNAME, settings.SIMULATION_AUTH_PASSWORD))
     parse = CiscoConfParse(response.text.splitlines())
 
