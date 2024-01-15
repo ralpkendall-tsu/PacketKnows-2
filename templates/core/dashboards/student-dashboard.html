@@ -56,7 +56,11 @@
             <hr>
             <div class="container d-flex justify-content-between align-items-center mt-4">
                 <p><span class="bg-pink p-1 rounded-circle me-2"><i class="fa-solid fa-square-check" style="color: #761E1E;"></i></span>Active Test:</p>
+                {% if activeTestCount %}
                 <p class="">{{activeTestCount}}</p>
+                {% else %}
+                <p class="">0</p>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-6 me-4">
@@ -89,22 +93,35 @@
             <div>
                 <div class="rating rating-1 d-inline-block">
                     <div class="rating-label text-white">
+                        {% if strengthRating %}
                         <p class="fs-4 p-0 m-0">{{strengthRating.1.average_percentage}}%</p>
                         <p class=" p-0 m-0">{{strengthRating.1.name}}</p>
+                        {% else %}
+                        <p class="fs-4 p-0 m-0">N/A</p>
+                        {% endif %}
+                        
                     </div>
                     <img src="{% static 'res/icons/Dashboard/Dashboard-circle3.png' %}" alt="" class="img-fluid">
                 </div>
                 <div class="rating rating-1 d-inline-block">
                     <div class="rating-label text-white">
+                        {% if strengthRating %}
                         <p class="fs-4 p-0 m-0">{{strengthRating.0.average_percentage}}%</p>
                         <p class=" p-0 m-0">{{strengthRating.0.name}}</p>
+                        {% else %}
+                        <p class="fs-4 p-0 m-0">N/A</p>
+                        {% endif %}
                     </div>
                     <img src="{% static 'res/icons/Dashboard/Dashboard-circle.png' %}" alt="" class="img-fluid">
                 </div>
                 <div class="rating rating-1 d-inline-block">
                     <div class="rating-label text-white">
+                        {% if strengthRating %}
                         <p class="fs-4 p-0 m-0">{{strengthRating.2.average_percentage}}%</p>
                         <p class=" p-0 m-0">{{strengthRating.2.name}}</p>
+                        {% else %}
+                        <p class="fs-4 p-0 m-0">N/A</p>
+                        {% endif %}
                     </div>
                     <img src="{% static 'res/icons/Dashboard/Dashboard-circle2.png' %}" alt="" class="img-fluid">
                 </div>
@@ -113,6 +130,7 @@
         </div>
         <div class="col-md-4">
             <p class="fs-5 fw-bold mb-5">Recent Classes</p>
+            {% if classroom %}
             {% for classroom in classes%}
             <a href="{% url 'core:classes' %}" class="text-dark unstyled text-decoration-none">
                 <div class="d-flex justify-content-between mt-4">
@@ -122,6 +140,10 @@
                 <hr class="mb-4 mt-0">
             </a>
             {% endfor %}
+            {% else %}
+            <p class="text-danger fw-bold">N/A</p>
+            {% endif %}
+            
         </div>
         <div class="col-md-4">
             <p class="fs-5 fw-bold mb-3">Feedback</p>

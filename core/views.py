@@ -36,38 +36,39 @@ def DashboardView(request):
             student = request.user
             context["notifications"] = Notification.objects.filter(receiver=student)
             
-            enrollments = Enrollment.objects.filter(student=request.user)
-            total_active_test_count = 0 
-            for enrollment in enrollments:
-                activities = enrollment.activities.filter(status="working")
-                total_active_test_count += activities.count()
-            
-            ordered_enrollments = enrollments.order_by('-date_updated')
-            classrooms = [enrollment.classroom for enrollment in ordered_enrollments]
-            
-            context["strengthRating"] = computeOverallStrengthRating(request.user)
-            context["activeTestCount"] = total_active_test_count
-            context["classes"] = classrooms
-            
-            # bar chart
-            average_progress = computeAverageClassProgress(request.user, "training")
-            
-            bar_chart_labels = average_progress['class_names']
-            bar_chart_data = average_progress['averages']
-            allClassesAverage = round(sum(bar_chart_data) / len(bar_chart_data), 2)
-            
-            context["barChartLabels"] = json.dumps(bar_chart_labels)
-            context["barChartData"] = json.dumps(bar_chart_data)
-            context["allClassesAverage"] = allClassesAverage
-            
-            context["barChartLabels"] = json.dumps(bar_chart_labels)
-            context["barChartData"] = json.dumps(bar_chart_data)
+            if(Enrollment.objects.filter(student=request.user).exists()):
+                enrollments = Enrollment.objects.filter(student=request.user)
+                total_active_test_count = 0 
+                for enrollment in enrollments:
+                    activities = enrollment.activities.filter(status="working")
+                    total_active_test_count += activities.count()
+                
+                ordered_enrollments = enrollments.order_by('-date_updated')
+                classrooms = [enrollment.classroom for enrollment in ordered_enrollments]
+                
+                context["strengthRating"] = computeOverallStrengthRating(request.user)
+                context["activeTestCount"] = total_active_test_count
+                context["classes"] = classrooms
+                
+                # bar chart
+                average_progress = computeAverageClassProgress(request.user, "training")
+                
+                bar_chart_labels = average_progress['class_names']
+                bar_chart_data = average_progress['averages']
+                allClassesAverage = round(sum(bar_chart_data) / len(bar_chart_data), 2)
+                
+                context["barChartLabels"] = json.dumps(bar_chart_labels)
+                context["barChartData"] = json.dumps(bar_chart_data)
+                context["allClassesAverage"] = allClassesAverage
+                
+                context["barChartLabels"] = json.dumps(bar_chart_labels)
+                context["barChartData"] = json.dumps(bar_chart_data)
             
             # feedback selection
-            enrollments = Enrollment.objects.filter(student=request.user)
-            classrooms = [enrollment.classroom for enrollment in enrollments]
+                enrollments = Enrollment.objects.filter(student=request.user)
+                classrooms = [enrollment.classroom for enrollment in enrollments]
             
-            context["classrooms"] = classrooms
+                context["classrooms"] = classrooms
             
         elif userCategory == "Instructor":
             classrooms = Classroom.objects.filter(instructor=request.user)
@@ -376,6 +377,7 @@ def ExamListView(request, classSlug, mode):
                 context["activities"] = activities
                 context["mode"] = mode
                 context["course"] = classroom.course
+                context["enrollmentID"] = enrollment.id
                 
                 enrollment = get_object_or_404(Enrollment, student=request.user, classroom=classroom)
                 enrollment.date_updated = timezone.now()
@@ -395,6 +397,7 @@ def ExamListView(request, classSlug, mode):
                 context["activities"] = activities
                 context["mode"] = mode
                 context["course"] = classroom.course
+                context["enrollmentID"] = enrollment.id
                 
                 enrollment = get_object_or_404(Enrollment, student=request.user, classroom=classroom)
                 enrollment.date_updated = timezone.now()
@@ -407,7 +410,7 @@ def ExamListView(request, classSlug, mode):
             
     return render(request, 'core/exam-list.html', context)
 
-def ActivitySimulationView(request, id, mode):
+def ActivitySimulationView(request, id, mode, enrollmentID):
     context = {}
     
     if request.method == 'POST':
@@ -417,10 +420,16 @@ def ActivitySimulationView(request, id, mode):
         if userCategory == "Student":
             activity = Activity.objects.get(id=id)
             context["activity"] = activity
+            context["enrollmentID"] = enrollmentID
         elif userCategory == "Instructor":
             pass
         elif userCategory == "Self Learner":
-            pass
+            activity = Activity.objects.get(id=id)
+            context["activity"] = activity
+            context["enrollmentID"] = enrollmentID
+            
+            
+            
 
     response = render(request, 'core/activity.html', context)
     response['X-Frame-Options'] = 'ALLOWALL'

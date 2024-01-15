@@ -20,7 +20,7 @@
 
     {%for activity in activities%}
     <div class="container mx-5 px-5 mb-3">
-        <a class="fw-bold text-black text-decoration-none" href="{% url 'core:activity' id=activity.id mode=mode%}"><i class="fa-regular fa-clipboard fa-lg me-3" style="color: #761E1E;"></i>{{activity.base_activity.number}} - {{course.slug}} - {{activity.base_activity.name}}</a>
+        <a class="fw-bold text-black text-decoration-none" href="{% url 'core:activity' id=activity.id mode=mode enrollmentID=enrollmentID%}"><i class="fa-regular fa-clipboard fa-lg me-3" style="color: #761E1E;"></i>{{activity.base_activity.number}} - {{course.slug}} - {{activity.base_activity.name}}</a>
         <hr class="me-5">
     </div>
     {% endfor %}

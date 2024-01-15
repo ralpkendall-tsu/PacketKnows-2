@@ -27,9 +27,9 @@ class Classroom(models.Model):
     
 class Enrollment(models.Model):
     student = models.ForeignKey(userModels.CustomUser, on_delete=models.CASCADE)
-    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, )
     status = models.CharField(max_length=50, default="training")
-    activities = models.ManyToManyField(activityModels.Activity)
+    activities = models.ManyToManyField(activityModels.Activity, blank=True)
     date_updated = models.DateTimeField(auto_now=True)
     
     class Meta:

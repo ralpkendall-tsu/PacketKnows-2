@@ -6,22 +6,100 @@
         <div class="col-md-4 ">
             <a class="mb-1" href="javascript:history.back()"><i class="fa-solid fa-xl fa-circle-arrow-left" style="color: #761E1E;"></i></a>
         </div>
+
+        <div class="col-md-4 ">
+            
+        </div>
     </div>
 
-    <iframe title="hello" src="{% gns3_project_url activity=activity.projectID%}" width="1200" height="650"></iframe>
+    
+    <div class="d-flex position-relative">
+        <button id="pdfButton" class="btn btn-success position-absolute" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fas fa-file-pdf me-2"></i>See Instructions
+        </button>
 
-    <div class="d-flex justify-content-between bg-dark-red px-3 mt-2" style="width:1200px;">
-        <div>
+        <iframe title="hello" src="{% gns3_project_url activity=activity.projectID %}" width="1200" height="600"></iframe>
+    </div>
+
+    
+
+    <form id="saveForm" hx-post="{% url 'simulation:saveActivity' activityID=activity.id%}" hx-swap="none" class="d-flex justify-content-between align-items-center bg-dark-red px-3 mt-2" style="width:1200px;">
+        <div class="text-white">
             {{activity.base_activity.number}} - {{activity.base_activity.course.slug}} - {{activity.base_activity.name}}
         </div>
-        <div id="timer-container">
-            <p>Time passed: <span id="timer">0:00</span></p>
+        <div class="text-white">
+            Time passed: <span id="timer">{{activity.time_spent}}</span>
+            <input id="timeSpent" name="timeSpent" type="number" value="{{activity.time_spent}}" style="display:none;">
         </div>
         <div>
-            <button class="btn">Restart</button>
-            <button class="btn">Save</button>
-            <button class="btn">Scores</button>
-            <button class="btn text-success">Submit</button>
+            <button class="btn text-white" hx-post="{% url 'simulation:restartActivity' activityID=activity.id enrollmentID=enrollmentID %}" hx-swap="none">Restart</button>
+            <button class="btn text-white">Save</button>
+            <button class="btn text-white">Scores</button>
+            <button class="btn text-success fw-bold">Submit</button>
+        </div>
+    </form>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% if activity.mode == "training"  %}
+                <iframe src="{% url 'activity:servePdf' pdf_path=activity.base_activity.training_task.url %}" type="application/pdf" width="100%" height="600px"></iframe>
+                {% else %}
+                <iframe src="{% url 'activity:servePdf' pdf_path=activity.base_activity.testing_task.url %}" type="application/pdf" width="100%" height="600px"></iframe>
+                {% endif %}
+                
+            </div>
         </div>
     </div>
 </div>
+
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the initial time in seconds from the span element
+        var initialTimeInSeconds = parseInt(document.getElementById('timer').innerText);
+
+        // Set up the countdown timer
+        var timerElement = document.getElementById('timer');
+
+        function updateTimer() {
+            // Calculate hours, minutes, and seconds
+            var hours = Math.floor(initialTimeInSeconds / 3600);
+            var minutes = Math.floor((initialTimeInSeconds % 3600) / 60);
+            var seconds = initialTimeInSeconds % 60;
+
+            // Display the formatted time in the timer element
+            timerElement.innerText = (hours > 0 ? hours + 'h : ' : '') + minutes + 'm : ' + seconds + 's';
+
+            // Increment the remaining time
+            initialTimeInSeconds++;
+            let inputTime = document.querySelector("#timeSpent")
+            inputTime.value = initialTimeInSeconds
+
+            // Update the timer every second (1000 milliseconds)
+            setTimeout(updateTimer, 1000);
+        }
+
+        // Start the countdown timer
+        updateTimer();
+    });
+
+
+    let saveForm = document.getElementById('saveForm');
+    
+    document.body.addEventListener('htmx:afterRequest', function (event) {
+        if (event.detail.elt === saveForm) {
+            var response = JSON.parse(event.detail.xhr.response);
+            window.history.back();
+        }
+    });
+
+    
+</script>

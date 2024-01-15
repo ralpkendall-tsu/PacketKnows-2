@@ -116,12 +116,43 @@ def computeSingleActivityScore(student, activity_id):
         base_activity = activity.base_activity
 
         # Assuming you want to calculate the scores for the 5 categories
+        
+        if base_activity.max_physical_points == 0:
+            physical_percentage = 0
+        else:
+            physical_percentage = round((activity.physical_points / base_activity.max_physical_points) * 100, 2)
+        
+        if base_activity.max_physical_points == 0:
+            physical_percentage = 0
+        else:
+            physical_percentage = round((activity.physical_points / base_activity.max_physical_points) * 100, 2)
+
+        if base_activity.max_basic_config_points == 0:
+            basic_config_percentage = 0
+        else:
+            basic_config_percentage = round((activity.basic_config_points / base_activity.max_basic_config_points) * 100, 2)
+
+        if base_activity.max_ip_points == 0:
+            ip_percentage = 0
+        else:
+            ip_percentage = round((activity.ip_points / base_activity.max_ip_points) * 100, 2)
+
+        if base_activity.max_routing_points == 0:
+            routing_percentage = 0
+        else:
+            routing_percentage = round((activity.routing_points / base_activity.max_routing_points) * 100, 2)
+
+        if base_activity.max_other_points == 0:
+            other_percentage = 0
+        else:
+            other_percentage = round((activity.other_points / base_activity.max_other_points) * 100, 2)
+    
         category_percentages = {
-            'physical_percentage': round((activity.physical_points / base_activity.max_physical_points) * 100, 2),
-            'basic_config_percentage': round((activity.basic_config_points / base_activity.max_basic_config_points) * 100, 2),
-            'ip_percentage': round((activity.ip_points / base_activity.max_ip_points) * 100, 2),
-            'routing_percentage': round((activity.routing_points / base_activity.max_routing_points) * 100, 2),
-            'other_percentage': round((activity.other_points / base_activity.max_other_points) * 100, 2),
+            'physical_percentage': physical_percentage,
+            'basic_config_percentage': basic_config_percentage,
+            'ip_percentage': ip_percentage,
+            'routing_percentage': routing_percentage,
+            'other_percentage': other_percentage,
         }
 
         # Populate the labels and data for the bar chart
@@ -289,11 +320,36 @@ def calculatePercentage(activity):
     try:
         base_activity = activity.base_activity
 
-        physical_percentage = round((activity.physical_points / base_activity.max_physical_points) * 100, 2)
-        basic_config_percentage = round((activity.basic_config_points / base_activity.max_basic_config_points) * 100, 2)
-        ip_percentage = round((activity.ip_points / base_activity.max_ip_points) * 100, 2)
-        routing_percentage = round((activity.routing_points / base_activity.max_routing_points) * 100, 2)
-        other_percentage = round((activity.other_points / base_activity.max_other_points) * 100, 2)
+        if base_activity.max_physical_points == 0:
+            physical_percentage = 0
+        else:
+            physical_percentage = round((activity.physical_points / base_activity.max_physical_points) * 100, 2)
+        
+        if base_activity.max_physical_points == 0:
+            physical_percentage = 0
+        else:
+            physical_percentage = round((activity.physical_points / base_activity.max_physical_points) * 100, 2)
+
+        if base_activity.max_basic_config_points == 0:
+            basic_config_percentage = 0
+        else:
+            basic_config_percentage = round((activity.basic_config_points / base_activity.max_basic_config_points) * 100, 2)
+
+        if base_activity.max_ip_points == 0:
+            ip_percentage = 0
+        else:
+            ip_percentage = round((activity.ip_points / base_activity.max_ip_points) * 100, 2)
+
+        if base_activity.max_routing_points == 0:
+            routing_percentage = 0
+        else:
+            routing_percentage = round((activity.routing_points / base_activity.max_routing_points) * 100, 2)
+
+        if base_activity.max_other_points == 0:
+            other_percentage = 0
+        else:
+            other_percentage = round((activity.other_points / base_activity.max_other_points) * 100, 2)
+            
 
         total_percentage = round(
             sum([physical_percentage, basic_config_percentage, ip_percentage, routing_percentage, other_percentage]) / 5,
@@ -310,5 +366,6 @@ def calculatePercentage(activity):
             'other_percentage': other_percentage,
             'total_percentage': total_percentage
         }
-    except:
+    except Exception as e:
+        print(e)
         return None
