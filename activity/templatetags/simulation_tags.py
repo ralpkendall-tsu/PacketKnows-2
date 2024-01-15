@@ -5,4 +5,4 @@ register = template.Library()
 
 @register.simple_tag
 def gns3_project_url(activity):
-    return f"{settings.SIMULATION_SITE_DOMAIN}static/web-ui/server/1/project/{activity}/"
+    return f"{settings.SIMULATION_SITE_DOMAIN}static/web-ui/server/1/project/{activity}"

@@ -9,7 +9,7 @@ from django.conf import settings
 
 @receiver(post_save, sender=Enrollment)
 def create_activities(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.student.category == "Student":
         created_activities = create_enrollment_activities(instance)
 
         # Set the created activities to the Enrollment instance
