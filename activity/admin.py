@@ -28,6 +28,7 @@ admin.site.register(BaseActivity, BaseActivityAdmin)
 
 class ActivityAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'base_activity_course_slug',
         'base_activity_number',
         'mode',
@@ -35,7 +36,7 @@ class ActivityAdmin(admin.ModelAdmin):
         'status',
     )
     list_filter = ('mode', 'status')
-    search_fields = ('base_activity__course__slug', 'base_activity__number')
+    search_fields = ('base_activity__course__slug', 'base_activity__number', 'id')
 
     def base_activity_course_slug(self, obj):
         return obj.base_activity.course.slug

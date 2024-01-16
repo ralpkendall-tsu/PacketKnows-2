@@ -11,6 +11,7 @@ from django.http import HttpRequest
 from .utils import IntermediaryUtils, pcUtils
 from . import scoring
 from ciscoconfparse import CiscoConfParse
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -88,10 +89,41 @@ def ScoresView(request,activityID):
 
     return JsonResponse(points)
 
-def SubmitActivityView(request):
-    pass
+def SubmitActivityView(request, activityID):
+    activity = Activity.objects.get(id=activityID)
+    timeSpent = request.POST.get("timeSpent2")
 
+    activity.time_spent = timeSpent
+    activity.status = "close"
+    
+    print(1)
+    projectID = activity.projectID
+    nodes = getAllNodes(projectID)
+    print(2)
+    allConfigs = getAllNodeConfigs(projectID, nodes)
+    print(3)
+    allConfigs["links"] = IntermediaryUtils.getAllLinks(projectID, nodes)
+    print(4)
 
+    correctConfigString = activity.base_activity.answer_key
+    correctConfig = json.loads(correctConfigString)
+    correctConfig = json.loads(correctConfig)
+
+    points = scoring.getPoints(allConfigs, correctConfig)
+
+    # print(allConfigs)
+    # print(correctConfig)
+    # print("")
+    print(points)
+    
+    activity.physical_points = points['Total Points:']['physical']
+    activity.basic_config_points = points['Total Points:']['basic configuration']
+    activity.ip_points = points['Total Points:']['ip']
+    activity.routing_points = points['Total Points:']['routing']
+    activity.other_points = points['Total Points:']['other']
+    activity.save()
+
+    return JsonResponse(points)
 
 
 def getAllNodes(projectID):
@@ -302,5 +334,51 @@ def getRouterConfigToJSONObject(projectID, node, routerCounter):
     # Extract VLAN configurations (if present) # Implemented but not Tested
 
     return jsonConfig
+
+
+
+@csrf_exempt
+def ConfigSerializerView(request):
+    if request.method == "POST":
+        json_string = request.body.decode('utf-8')
+
+        # Remove newline characters and extra spaces from the JSON string
+
+        # Return the cleaned JSON string as a response
+        return JsonResponse(json_string, safe=False)
+    
+@csrf_exempt
+def ConfigDeserializerView(request):
+    if request.method == "POST":
+
+        # Load the JSON string into a Python dictionary
+        config = json.loads(request.body)
+        config = json.loads(config)
+
+        # Return the dictionary as a JSON response
+        return JsonResponse(config, safe=False)
+    
+@csrf_exempt 
+def SimulationView(request, projectID):
+    nodes = getAllNodes(projectID)
+
+    allConfigs = getAllNodeConfigs(projectID, nodes)
+    allConfigs["links"] = IntermediaryUtils.getAllLinks(projectID, nodes)
+
+    correctConfig = {}
+    
+    
+    points = scoring.getPoints(allConfigs, correctConfig)
+    # return JsonResponse(allConfigs)
+    return JsonResponse(points)
+
+@csrf_exempt
+def ConfigView(request, projectID):
+    nodes = getAllNodes(projectID)
+
+    allConfigs = getAllNodeConfigs(projectID, nodes)
+    allConfigs["links"] = IntermediaryUtils.getAllLinks(projectID, nodes)
+
+    return JsonResponse(allConfigs)
 
 
