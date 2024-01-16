@@ -72,7 +72,9 @@ def ReactivateTestView(request, testReactivationID):
         try:
             testReactivation = TestReactivation.objects.get(id=testReactivationID)
             # reactivate the exam
+            
             # delete the test reactivation record(testReactivation)
+            testReactivation.delete()
             
             return JsonResponse({"message": "Test reactivated successfully"}, status=200)
         except Exception as e:
