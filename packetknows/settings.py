@@ -45,10 +45,13 @@ INSTALLED_APPS = [
     'help.apps.HelpConfig',
     'simulation.apps.SimulationConfig',
     'bootstrap5',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -150,6 +153,9 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'ralpkendall@gmail.com'
 EMAIL_HOST_PASSWORD = 'asixccwshtfjyxvk'
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 SITE_DOMAIN = 'http://127.0.0.1:80/'
 SIMULATION_SITE_DOMAIN = 'http://128.199.129.230:3080/'
