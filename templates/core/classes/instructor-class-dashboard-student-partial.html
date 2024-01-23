@@ -1,0 +1,16 @@
+{% for studentdata in studentDatas %}
+<a href="{% url 'core:progressReportTrainingInstructor' classSlug=classroom.code userID=studentdata.id %}" class="text-dark text-decoration-none">
+    <div class="row text-center align-items-center">
+        <div class="col-2">{{studentdata.name}}</div>
+        <div class="col-2">{{studentdata.currentMode}}</div>
+        <div class="col-3">{{studentdata.trainingPercentage}}</div>
+        <div class="col-3">{{studentdata.testingPercentage}}</div>
+        <div class="col-2">
+            <button class="btn btn-danger removeStudent" hx-post="{% url 'classroom:removeStudent' userID=studentdata.id classID=classroom.id %}">
+                Remove
+            </button>
+        </div>
+    </div>
+    <hr>
+</a>
+{% endfor %}

@@ -179,7 +179,7 @@ def ClassDashboardView(request, classID):
             studentData["name"] = f"{student.first_name} {student.last_name}"
             
             # current mode
-            enrollment = Enrollment(student=student, classroom=classroom)
+            enrollment = Enrollment.objects.get(student=student, classroom=classroom)
             studentData["currentMode"] = enrollment.status
             
             # training percentage
@@ -238,4 +238,36 @@ def RemoveStudentView(request, classID, userID):
         return JsonResponse({"message": "Student removed successfully"}, status=200)
     except Exception as e:
         return JsonResponse({"message": f"Error removing student: {str(e)}"}, status=500)
-   
+    
+    
+def GetStudentsView(request,classroomID, status):
+    context = {}
+    if request.method == "POST":
+        pass
+    else:
+        studentDatas = []
+        classroom = Classroom.objects.get(id=classroomID)
+        context["classroom"] = classroom
+        students = classroom.students.filter(enrollment__status=status)
+        
+        for student in students:
+            studentData = {}
+            studentData["id"] = student.id
+            studentData["name"] = f"{student.first_name} {student.last_name}"
+            
+            # current mode
+            enrollment = Enrollment.objects.get(student=student, classroom=classroom)
+            studentData["currentMode"] = enrollment.status
+            
+            # training percentage
+            studentData["trainingPercentage"] = computeTrainingProgressReport(student, classroom)["total_training_percentage"]
+            # testing percentage
+            studentData["testingPercentage"] = computeTestingProgressReport(student, classroom)["total_testing_percentage"]
+            
+            # append studentData to studentDatas
+            studentDatas.append(studentData)
+            
+        context["studentDatas"] = studentDatas
+        
+    return render(request, 'core/classes/instructor-class-dashboard-student-partial.html', context)
+    

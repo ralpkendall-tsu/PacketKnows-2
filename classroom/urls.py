@@ -17,4 +17,5 @@ urlpatterns = [
     path('archive-class/<int:classID>/', ClassroomViews.ArchiveClassView, name='archiveClass'),
     path('delete-class/<int:classID>/', ClassroomViews.DeleteClassView, name='deleteClass'),
     path('remove-student/<int:classID>/<int:userID>', ClassroomViews.RemoveStudentView, name='removeStudent'),
+    path('get-students/<int:classroomID>/<str:status>/', ClassroomViews.GetStudentsView, name='getStudents'),
 ]

@@ -84,30 +84,24 @@
                 </div>
 
                 <div class="container mt-5 ">
+
+                    <div class="d-flex gap-2 mb-5">
+                        <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='training' %}" hx-target="#studentsContainer">Training</button>
+                        <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='testing' %}" hx-target="#studentsContainer">Testing</button>
+                        <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='completed' %}" hx-target="#studentsContainer">Completed</button>
+                    </div>
                     
-                    <div class="row text-center fw-bold mb-3">
+                    <div class="row text-center fw-bold my-3">
                         <div class="col-2">ENROLLEE</div>
                         <div class="col-2">CURRENT MODE</div>
                         <div class="col-3">TRAINING PERCENTAGE</div>
                         <div class="col-3">TESTING PERCENTAGE</div>
                         <div class="col-2"></div>
                     </div>
-                    {% for studentdata in studentDatas %}
-                    <a href="{% url 'core:progressReportTrainingInstructor' classSlug=classroom.code userID=studentdata.id %}" class="text-dark text-decoration-none">
-                        <div class="row text-center align-items-center">
-                            <div class="col-2">{{studentdata.name}}</div>
-                            <div class="col-2">{{studentdata.currentMode}}</div>
-                            <div class="col-3">{{studentdata.trainingPercentage}}</div>
-                            <div class="col-3">{{studentdata.testingPercentage}}</div>
-                            <div class="col-2">
-                                <button class="btn btn-danger removeStudent" hx-post="{% url 'classroom:removeStudent' userID=studentdata.id classID=classroom.id %}">
-                                    Remove
-                                </button>
-                            </div>
-                        </div>
-                        <hr>
-                    </a>
-                    {% endfor %}
+                    <div id="studentsContainer">
+                        {% include 'core/classes/instructor-class-dashboard-student-partial.html'%}
+                    </div>
+                    
                 </div>
 
 
