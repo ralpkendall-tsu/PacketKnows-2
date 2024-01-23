@@ -18,4 +18,5 @@ urlpatterns = [
     path('delete-class/<int:classID>/', ClassroomViews.DeleteClassView, name='deleteClass'),
     path('remove-student/<int:classID>/<int:userID>', ClassroomViews.RemoveStudentView, name='removeStudent'),
     path('get-students/<int:classroomID>/<str:status>/', ClassroomViews.GetStudentsView, name='getStudents'),
+    path('enroll-student/<int:classroomID>/', ClassroomViews.EnrollStudentView, name='enrollStudent'),
 ]

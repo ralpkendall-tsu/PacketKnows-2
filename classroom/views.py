@@ -270,4 +270,26 @@ def GetStudentsView(request,classroomID, status):
         context["studentDatas"] = studentDatas
         
     return render(request, 'core/classes/instructor-class-dashboard-student-partial.html', context)
+
+def EnrollStudentView(request, classroomID):
+    if request.method == "POST":
+        studentEmail = request.POST.get("studentEmail")
+
+        try:
+            # Attempt to get the student with the provided email
+            student = get_object_or_404(CustomUser, category__name="Student", email=studentEmail)
+
+            # Check if the student is already enrolled in the classroom
+            if Enrollment.objects.filter(student=student, classroom=classroomID).exists():
+                return JsonResponse({"error": "Student is already enrolled in the classroom."}, status=400)
+
+            # Create a new enrollment
+            enrollment = Enrollment.objects.create(student=student, classroom_id=classroomID)
+
+            return JsonResponse({"message": f"Student {studentEmail} enrolled successfully in the classroom."})
+
+        except CustomUser.DoesNotExist:
+            return JsonResponse({"message": "Student not found with the provided email."}, status=404)
+
+    return JsonResponse({"message": "Invalid request method."}, status=405)
     

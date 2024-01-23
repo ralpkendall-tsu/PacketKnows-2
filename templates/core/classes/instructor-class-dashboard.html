@@ -85,10 +85,20 @@
 
                 <div class="container mt-5 ">
 
-                    <div class="d-flex gap-2 mb-5">
-                        <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='training' %}" hx-target="#studentsContainer">Training</button>
-                        <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='testing' %}" hx-target="#studentsContainer">Testing</button>
-                        <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='completed' %}" hx-target="#studentsContainer">Completed</button>
+                    <div class="d-flex gap-2 mb-5 justify-content-between">
+                        <div class="d-flex">
+                            <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='training' %}" hx-target="#studentsContainer">Training</button>
+                            <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='testing' %}" hx-target="#studentsContainer">Testing</button>
+                            <button class="btn " hx-get="{% url 'classroom:getStudents' classroomID=classroom.id status='completed' %}" hx-target="#studentsContainer">Completed</button>
+                        </div>
+                        <form hx-post="{% url 'classroom:enrollStudent' classroomID=classroom.id%}" hx-swap="none">
+                            {% csrf_token %}
+                            <div class="d-flex me-5">
+                                <input name="studentEmail" type="text" class="form-control w-100" id="enrollStudent" aria-describedby="enrollStudent" placeholder="Email">
+                                <button type="submit" class="btn btn-success w-75" id="addStudent">Add Student</button>
+                            </div>
+                        </form>
+                        
                     </div>
                     
                     <div class="row text-center fw-bold my-3">
@@ -114,6 +124,7 @@
 <script>
     archiveBtn = document.querySelector("#archiveClassbtn")
     deleteBtn = document.querySelector("#deleteClassbtn")
+    addStudentBtn = document.querySelector("#addStudent")
 
     document.body.addEventListener('htmx:afterRequest', function (event) {
         if (event.detail.elt === archiveBtn) {
@@ -126,6 +137,11 @@
 
             alert(response.message)
             window.location.href = "{% url 'core:classes' %}";
+        }else if (event.detail.elt === addStudentBtn) {
+            var response = JSON.parse(event.detail.xhr.response);
+
+            alert(response.message)
+            window.location.reload();
         }else{
             var response = JSON.parse(event.detail.xhr.response);
 
